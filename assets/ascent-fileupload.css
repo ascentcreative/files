@@ -1,0 +1,87 @@
+.fileupload.form-control {
+   padding: 0px;
+   overflow: hidden;
+   position: relative;
+}
+
+.fileupload input[type="file"] {
+    /* display: none; */
+    /* position: absolute; */
+    /* top: -100px; */
+
+    height: 30px;
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 100px;
+    z-index: 2;
+
+    /* pointer-events: none; */
+
+  
+}
+
+.fileupload .fileupload-ui {
+    display: flex;
+
+    position: relative;
+    cursor: pointer;
+
+}
+
+
+.fileupload .fileupload-ui:after {
+    content: 'Browse';
+    display: block;
+    padding: 0 10px;
+
+    color: #495057;
+    content: "Browse";
+    background-color: #e9ecef;
+
+    border-left: 1px solid #ced4da;
+
+    display: flex;
+    align-items: center;
+}
+
+.fileupload .fileupload-ui .fileupload-display {
+    flex: 1 1 100%;
+    height: calc(1.5em + .75rem + 2px);
+    position: relative;
+  
+
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+
+}
+
+.fileupload .fileupload-ui .fileupload-display .fileupload-text {
+    position: relative;
+    z-index: 1;
+}
+
+
+.fileupload .fileupload-display .fileupload-progress {
+
+    position: absolute;
+    background: #efefef;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+
+}
+
+.fileupload .fileupload-reset {
+    display: none;
+    position: relative;
+    z-index: 5;
+}
+
+.fileupload.has-file .fileupload-reset {
+    display: inline-block;
+}

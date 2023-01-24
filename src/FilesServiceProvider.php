@@ -18,7 +18,8 @@ class FilesServiceProvider extends ServiceProvider
 
 
     $this->commands([
-
+        \AscentCreative\Files\Commands\Purge::class,
+        
     ]);
 
   }
@@ -39,8 +40,13 @@ class FilesServiceProvider extends ServiceProvider
     $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
 
-    $this->bootComponents();
+    packageAssets()->addStylesheet('/vendor/ascent/files/ascent-fileupload.css');
+    packageAssets()->addScript('/vendor/ascent/files/ascent-fileupload.js');
 
+    packageAssets()->addStylesheet('/vendor/ascent/files/ascent-fileuploadmulti.css');
+    packageAssets()->addScript('/vendor/ascent/files/ascent-fileuploadmulti.js');
+
+    $this->bootComponents();
 
     $this->bootPublishes();
     
@@ -51,6 +57,8 @@ class FilesServiceProvider extends ServiceProvider
   // register the components
   public function bootComponents() {
 
+        Blade::component('files-fields-fileupload', 'AscentCreative\Files\Components\Fields\FileUpload');
+    
 
   }
 

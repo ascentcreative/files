@@ -1,0 +1,71 @@
+.fileuploadmulti .form-control {
+    padding: 0px;
+    overflow: hidden;
+    margin-bottom: 10px;
+ }
+
+.fileuploadmulti input[type="file"] {
+    display: none;
+}
+
+.fileuploadmulti .fileuploadmulti-ui {
+    display: flex;
+
+    position: relative;
+    cursor: pointer;
+
+}
+
+
+.fileupload .fileupload-ui:after {
+    content: 'Browse';
+    display: block;
+    padding: 0 10px;
+
+    color: #495057;
+    content: "Browse";
+    background-color: #e9ecef;
+
+    border-left: 1px solid #ced4da;
+
+    display: flex;
+    align-items: center;
+}
+
+.fileuploadmulti .fileuploadmulti-ui .fileupload-display {
+    flex: 1 1 100%;
+    height: calc(1.5em + .75rem + 2px);
+    position: relative;
+  
+
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+
+}
+
+.fileuploadmulti .fileupload-ui .fileupload-display .fileupload-text {
+    position: relative;
+    z-index: 11;
+}
+
+
+.fileuploadmulti .fileupload-display .fileupload-progress {
+
+    position: absolute;
+    background: #efefef;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+
+}
+
+.fileuploadmulti .fileupload-reset {
+    display: none;
+}
+
+.fileuploadmulti.has-file .fileupload-reset {
+    display: inline-block;
+}

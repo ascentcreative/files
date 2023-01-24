@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CoreTables extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -25,10 +25,10 @@ class CoreTables extends Migration
 
             $table->string('mime_type', 50);
             
-            $table->string('attachable_type');
-            $table->bigInteger('attachable_id');
-            $table->string('attachable_key');
-            $table->integer('attachable_sort');
+            $table->string('attachedto_type');
+            $table->bigInteger('attachedto_id');
+            $table->string('attachedto_key');
+            $table->integer('attachedto_sort');
 
             $table->timestamps();
             
@@ -48,4 +48,4 @@ class CoreTables extends Migration
         Schema::drop('files_files');
 
     }
-}
+};
