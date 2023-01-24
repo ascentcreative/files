@@ -5,14 +5,15 @@
 
 @section('element')
 
-
-    <div class="fileupload form-control" id="{{nameToId($name)}}" data-fieldname="{{ $name }}"
+    <div class="fileupload form-control" id="{{nameToId($name)}}" 
+            data-fieldname="{{ $name }}"
             data-disk="{{ $disk }}"
             data-path="{{ $path }}"
             data-preservefilename="{{ $preserveFilename ? 'true':'false' }}"
+            data-value="{{ json_encode($value) }}"
         >
 
-        <input type="file" class="fileupload-file" name="{{ $name }}[upload]" @if($accept) accept="{{ join(',', $accept) }}" @endif id="{{nameToId($name)}}-upload">
+        <input type="file" class="fileupload-file" @if($accept) accept="{{ join(',', $accept) }}" @endif id="{{nameToId($name)}}-upload">
 
         <label class="fileupload-ui" for="{{ nameToId($name) }}-upload">
         
@@ -23,22 +24,15 @@
                 <div class="fileupload-progress"></div>
                 <div class="fileupload-text">
                     
-                    @if($value) 
-                        @php
-                            $file = AscentCreative\CMS\Models\File::find($value);
-                        @endphp
-                            {{ $file->original_name }}
-                    @else
                         Choose file
-                    @endif
                     
                 </div>
 
             </div>
+
         </label>
-        <input type="hidden" name="{{$name}}" class="fileupload-value" id="{{nameToId($name)}}-value" value="{{ $value }}">
-        
-        
+        <input type="hidden" name="{{$name}}" class="fileupload-value" id="{{nameToId($name)}}-value" value="">
+    
     </div>
 
 @overwrite

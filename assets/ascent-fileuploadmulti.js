@@ -29,13 +29,17 @@ var FileUploadMulti = {
         var fldName = idAry[1];
         
         var obj = this.element;
-        
-        console.log(this.options.data);
 
-        for(file in this.options.data) {
-            
-            this.createFileBlock(this.options.data[file]);
+        this.options.disk = $(obj).data('disk');
+        this.options.path = $(obj).data('path');
+        this.options.preserveFilename = $(obj).data('preservefilename');
+        this.options.data = obj.data('value');
 
+        if(this.options.data) {
+            for(file in this.options.data) {
+                this.createFileBlock(this.options.data[file]);
+            }
+            this.updateFileIndexes();
         }
     
         upl = $(this.element).find('input[type="file"]');

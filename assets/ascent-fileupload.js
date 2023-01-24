@@ -40,11 +40,16 @@ var FileUpload = {
 
         upl = $(this.element).find('input[type="file"]');
 
+        console.log($(this.element).data());
 
         // alert('init uplaoder');
 
-        if($(this.element).find('.fileupload-value').val() != '') {
-            $(this.element).addClass('has-file');
+        // if($(this.element).find('.data-item').length > 0) {
+        //     $(this.element).addClass('has-file');
+        // }
+
+        if(data = $(this.element).data('value')) {
+            this.setValue(data);
         }
 
         $(this.element).find('.fileupload-reset').on('click', function(e) {

@@ -7,7 +7,14 @@
 
     <div class="p-3 bg-light border">
 
-    <div class="fileuploadmulti" id="{{nameToId($name)}}"" name="{{ $name }}" data-fieldname="{{ $name }}">
+    <div class="fileuploadmulti" id="{{nameToId($name)}}"" name="{{ $name }}" 
+        data-fieldname="{{ $name }}"
+        data-value="{{ json_encode($value) }}"
+        data-sortable="{{ $sortable ? 'true' : 'false' }}"
+        data-disk="{{ $disk }}"
+        data-path="{{ $path }}"
+        data-preservefilename="{{ $preserveFilename ? 'true':'false' }}"
+        >
         <input type="file" multiple class="fileupload-file" accept="{{ join(',', $accept) }}" id="{{nameToId($name)}}-upload">        
     </div>
 
@@ -43,11 +50,8 @@
     <script>
         $(document).ready(function() {
             $('#{{ nameToId($name) }}').fileuploadmulti({
-                data: @json($value),
-                sortable: {{ $sortable ? 'true' : 'false' }},
-                disk: '{{ $disk }}',
-                path: '{{ $path }}',
-                preserveFilename: {{ $preserveFilename ? 'true':'false' }}
+   
+               
             });
         });
     </script>

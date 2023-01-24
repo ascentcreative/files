@@ -22,10 +22,9 @@ Route::middleware(['web'])->group(function() {
         $payload = request()->file('payload');
         $sanitise = $payload->getClientOriginalName();
         $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
-        $file->original_filename = $sanitise; // nb - the File model will check for duplicate filenames and increment on save.
-
-        // or should there be a 'commit' flag in the posted data for times when we do need to do that?
-        // - If we do, we should allow the imageable_xyz to be supplied also.
+        $file->original_filename = $sanitise; 
+        // TODO - the File model will need to check for duplicate filenames and increment on save.
+        // Or does it need to? yes, I think it does. 
 
         return response()->json($file);
 
