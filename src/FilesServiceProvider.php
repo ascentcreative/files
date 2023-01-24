@@ -4,7 +4,11 @@ namespace AscentCreative\Files;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Routing\Router;
+
+use AscentCreative\Files\Models\File;
+use AscentCreative\Files\Policies\FilePolicy;
 
 class FilesServiceProvider extends ServiceProvider
 {
@@ -21,6 +25,8 @@ class FilesServiceProvider extends ServiceProvider
         \AscentCreative\Files\Commands\Purge::class,
         
     ]);
+
+    Gate::policy(File::class, FilePolicy::class);
 
   }
 

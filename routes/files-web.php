@@ -32,58 +32,19 @@ Route::middleware(['web'])->group(function() {
     })->middleware('auth', 'can:upload-files');
 
 
-  
+    /**
+     * Route to access the file.
+     */
+    Route::get('/getfile/{file:original_filename}', function(File $file) {
 
-    // /**
-    //  * Route to stream the image according to a spec definition
-    //  *  - loads the spec from the images-output config file
-    //  *  - Creates rendered images on the fly, but only if not already created
-    //  *  - Allows browser to cache images as it would with files served directly
-    //  */
-    // Route::get('/image/{spec}/{filename}', function($spec, $filename) {
+        return $file->download();
 
-    //     // get the image by the filename requested
-    //     // - filename could be the hashed or original. 
-    //     // - if hashed, just stream that file.
+    })
+    // NB - the FilePolicy will control access, and will look for the policy for the model the file is attached to.
+    ->can('download', 'file')
+    ->name('file.url');
 
-    
-    //     // Note: the Image model may not exist yet
-    //     // The file may have been uploaded, but not comitted to the database
-    //     // As such, for previews etc we can allow access using the hashed filename,
-    //     // bypassing the model (which is essentially just a lookup to get the hashed filename anyway)
-        
-    //     $model = Image::where('original_filename', $filename)->first();
-    //     if($model) {
-    //         $filename = $model->hashed_filename; // get the hashed filename from the model
-    //     }
-
-
-    //     // does this file exist for the requested spec?
-    //     if (!Storage::disk('images')->exists($spec . '/'. $filename)) {
-
-    //         // No:
-    //         // - so does it exist in the 'original' folder?
-    //         if (Storage::disk('images')->exists('/original/'. $filename)) {
-
-    //             ImageSizer::handle($filename, $spec);
-
-    //         } else {
-    //             // nope, not in originals folder either - bail.
-    //             abort(404);
-    //         }
-    //     }
-
-    //     /* set up caching for one week */
-    //     $cache_exp = new Carbon\Carbon();
-    //     $cache_exp->addWeeks(1);
-
-    //     return Storage::disk('images')->download($spec . '/'. $filename, null, [
-    //         'Cache-Control' => 'public, max-age=' . (86400 * 7),
-    //         'expires' => $cache_exp->toRfc7231String(),
-    //     ]);
-
-    // })->name('image.display'); 
-
+   
 
     Route::get('/image/test', function() {
         return view('images::test');

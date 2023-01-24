@@ -167,7 +167,7 @@ var FileUploadMultiFile = {
           // create a load of hidden text fields, holding the data items (allows for changes to the model?)
         for(key in data) {
             console.log(key);
-            $(this.element).append('<input type="text" class="data-item" name="' + this.options.fieldname + '[9999][' + key + ']" value="' + data[key] + '">');
+            $(this.element).append('<input type="hidden" class="data-item" name="' + this.options.fieldname + '[9999][' + key + ']" value="' + data[key] + '">');
         }
 
         $(this.element).addClass('has-file');
