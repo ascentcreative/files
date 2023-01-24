@@ -7,8 +7,6 @@ Route::middleware(['web'])->group(function() {
     
     Route::post('/file-upload', function($spec=null) {
 
-        // return $spec ?? "No Spec Sent";
-
         $params = request()->all();
       
         // Store image on disk.
@@ -23,6 +21,9 @@ Route::middleware(['web'])->group(function() {
         $sanitise = $payload->getClientOriginalName();
         $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
         $file->original_filename = $sanitise; 
+        $file->size = Storage::disk('files')->size($path);
+        $file->mime_type = Storage::disk('files')->mimeType($path);
+
         // TODO - the File model will need to check for duplicate filenames and increment on save.
         // Or does it need to? yes, I think it does. 
 

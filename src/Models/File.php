@@ -14,7 +14,7 @@ class File extends Model
 
     public $table = 'files_files';
 
-    public $fillable = ['disk', 'hashed_filename', 'original_filename', 'mime_type', 'attachedto_type', 'attachedto_id', 'attachedto_key', 'attachedto_sort'];
+    public $fillable = ['disk', 'hashed_filename', 'original_filename', 'mime_type', 'size', 'attachedto_type', 'attachedto_id', 'attachedto_key', 'attachedto_sort'];
 
     public function attachedto() {
         return $this->morphTo();
@@ -32,6 +32,17 @@ class File extends Model
         }
 
         return Storage::disk($this->disk)->download($this->hashed_filename, $this->original_filename);
+
+    }
+
+    public function getSizeHumanAttribute() {
+
+        $dec = 1;
+        $bytes = $this->size > 0 ? $this->size : Storage::disk($this->disk)->filesize($this->hashed_filename);
+        $size   = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $factor = floor((strlen($bytes) - 1) / 3);
+
+        return sprintf("%.{$dec}f", $bytes / pow(1024, $factor)) . @$size[$factor];
 
     }
 
