@@ -11,18 +11,25 @@ Route::middleware(['web'])->group(function() {
 
         $disk = Storage::disk($params['disk']);
         // dd($params);
+
+        $payload = request()->file('payload');
+        $sanitise = $payload->getClientOriginalName();
+        $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
       
         // Store image on disk.
-        $path = $disk->putFile('/' . $params['path'], request()->file('payload'));
+        if($params['preserveFilename']) {
+            $path = $disk->putFileAs('/' . $params['path'], request()->file('payload'),  $sanitise);
+        } else {
+            $path = $disk->putFile('/' . $params['path'], request()->file('payload'));
+        }
+        
   
         // Create a File model, but don't save it - Return as JSON.
         $file = new File();
         $file->disk = $params['disk']; //'files';
         $file->hashed_filename = $path; //pathinfo($path)['basename']; 
 
-        $payload = request()->file('payload');
-        $sanitise = $payload->getClientOriginalName();
-        $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
+       
         $file->original_filename = $sanitise; 
         $file->size = $disk->size($path);
         $file->mime_type = $disk->mimeType($path);
