@@ -16,6 +16,7 @@
         data-preservefilename="{{ $preserveFilename ? 'true':'false' }}"
         >
         <input type="file" multiple class="fileupload-file" accept="{{ join(',', $accept) }}" id="{{nameToId($name)}}-upload">        
+        <input type="hidden" value="" name="{{ $name }}" />
     </div>
 
     <label class="button btn btn-primary btn-sm bi-plus-circle-fill mb-0" for="{{ nameToId($name) }}-upload">

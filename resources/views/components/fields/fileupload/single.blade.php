@@ -31,7 +31,7 @@
             </div>
 
         </label>
-        <input type="hidden" name="{{$name}}" class="fileupload-value" id="{{nameToId($name)}}-value" value="">
+        <input type="hidden" name="{{$name}}" class="fileupload-value" id="{{nameToId($name)}}-value" :value="[]">
     
     </div>
 

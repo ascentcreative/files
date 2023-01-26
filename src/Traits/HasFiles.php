@@ -17,8 +17,6 @@ trait HasFiles {
 
     public function initializeHasFiles() {
 
-        // dd($this->multifile_fields);
-
         if(is_array($this->multifile_fields)) {
             foreach($this->multifile_fields as $file) {
                $this->addCapturable($file, 'deleteMultiFiles', 'saveMultiFiles');
@@ -37,11 +35,14 @@ trait HasFiles {
 
     public function saveSingleFile($field, $data) {
 
-        // dump($field);
-        // dd($data);
-
         if($data) {
 
+            $stored = $this->file($field)->first();
+
+            if ($stored && $stored->id != ($data['id'] ?? '')) {
+                $stored->delete();
+            } 
+        
             $file = $this->file($field)->updateOrCreate(
                 [
                     'id'=>$data['id'] ??  null,
@@ -50,11 +51,11 @@ trait HasFiles {
                 $data
             );
 
+
         } else {
 
             // null incoming info - must delete any existing record
-            $files = $this->file($field)->delete(); //get();
-            // $files->delete();
+            $files = $this->file($field)->delete();
             
         }
 
@@ -130,8 +131,11 @@ trait HasFiles {
         return $q;
     }
 
-    public function file($key) {
-        $q = $this->morphOne(File::class, 'attachedto')->orderby('attachedto_sort')->where('attachedto_key', $key);
+    public function file($key=null) {
+        $q = $this->morphOne(File::class, 'attachedto')->orderby('attachedto_sort');
+        if($key) {
+            $q->where('attachedto_key', $key);
+        }
         return $q;
     }
 
