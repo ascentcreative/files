@@ -41,6 +41,7 @@ trait HasFiles {
 
             if ($stored && $stored->id != ($data['id'] ?? '')) {
                 $stored->delete();
+                // dd('dleeted')
             } 
         
             $file = $this->file($field)->updateOrCreate(
@@ -55,7 +56,10 @@ trait HasFiles {
         } else {
 
             // null incoming info - must delete any existing record
-            $files = $this->file($field)->delete();
+            $file = $this->file($field)->first();
+            if($file) {
+                $file->delete();
+            }
             
         }
 

@@ -8,21 +8,24 @@ Route::middleware(['web'])->group(function() {
     Route::post('/file-upload', function($spec=null) {
 
         $params = request()->all();
+
+        $disk = Storage::disk($params['disk']);
+        // dd($params);
       
         // Store image on disk.
-        $path = Storage::disk('files')->putFile('', request()->file('payload'));
+        $path = $disk->putFile('/' . $params['path'], request()->file('payload'));
   
         // Create a File model, but don't save it - Return as JSON.
         $file = new File();
-        $file->disk = 'files';
-        $file->hashed_filename = pathinfo($path)['basename']; // only store the hashed name in the model. Don't need any folders etc.
+        $file->disk = $params['disk']; //'files';
+        $file->hashed_filename = $path; //pathinfo($path)['basename']; 
 
         $payload = request()->file('payload');
         $sanitise = $payload->getClientOriginalName();
         $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
         $file->original_filename = $sanitise; 
-        $file->size = Storage::disk('files')->size($path);
-        $file->mime_type = Storage::disk('files')->mimeType($path);
+        $file->size = $disk->size($path);
+        $file->mime_type = $disk->mimeType($path);
 
         // TODO - the File model will need to check for duplicate filenames and increment on save.
         // Or does it need to? yes, I think it does. 

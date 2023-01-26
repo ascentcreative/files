@@ -29,7 +29,7 @@ class FileUpload extends Component
      *
      * @return void
      */
-    public function __construct($label, $name, $value, $disk='public', $path='ajaxuploads', $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', $accept=[], $multiple=false, $sortable=false)
+    public function __construct($label, $name, $value, $disk='files', $path='', $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', $accept=[], $multiple=false, $sortable=false)
     {
         
         $this->label = $label;

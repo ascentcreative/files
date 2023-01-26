@@ -16,9 +16,23 @@ class File extends Model
 
     public $fillable = ['disk', 'hashed_filename', 'original_filename', 'mime_type', 'size', 'attachedto_type', 'attachedto_id', 'attachedto_key', 'attachedto_sort'];
 
+
+    protected static function booted() {
+        // delete on-disk file
+        static::deleted(function ($model) {
+            //dd('deleting file');
+            // $model->file()->delete();
+            Storage::disk($model->disk)->delete($model->hashed_filename);
+        });
+    }
+
+
+
     public function attachedto() {
         return $this->morphTo();
     }
+
+  
 
 
     public function download() {
