@@ -194,6 +194,10 @@ var FileUploadMultiFile = {
 
     },
 
+    setError: function(text) {
+        $(this.element).addClass('error').find('.fileupload-text').html(text);   
+    },
+
     upload: function(file) {
 
         var self = this;
@@ -220,7 +224,7 @@ var FileUploadMultiFile = {
                     var percentComplete = (evt.loaded / evt.total) * 100;
                     //Do something with upload progress
                     //prog.find('PROGRESS').attr('value', percentComplete);
-                    self.updateUI('Uploading...', percentComplete);
+                    self.updateUI('Uploading: ' + Math.round(percentComplete) + "%", percentComplete);
                     console.log(percentComplete);
 
                     }
@@ -270,19 +274,19 @@ var FileUploadMultiFile = {
 
             switch(data.status) {
                 case 403:
-                    alert('You do not have permission to upload files');
+                    self.setError('You do not have permission to upload files');
 
                 //   self.updateUI('You do not have permission to upload files', 0, 'error');
 
                     break;
 
                 case 413:
-                    alert('The file is too large for the server to accept');
+                    self.setError('The file is too large for the server to accept');
                     //self.updateUI('The file is too large for the server to accept', 0, 'error');
                     break;
 
                 default:
-                    alert('An unexpected error occurred');
+                    self.setError('An unexpected error occurred');
                     //self.updateUI('An unexpected error occurred', 0, 'error');
                     break;
             }

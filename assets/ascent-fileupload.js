@@ -59,6 +59,8 @@ var FileUpload = {
         
         $(upl).on('change', function() {
 
+            self.reset();
+
             var formData = new FormData(); 
             formData.append('payload', this.files[0]); 
             formData.append('disk', self.options.disk);
@@ -79,7 +81,7 @@ var FileUpload = {
                       var percentComplete = (evt.loaded / evt.total) * 100;
                       //Do something with upload progress
                       //prog.find('PROGRESS').attr('value', percentComplete);
-                      self.updateUI('Uploading...', percentComplete);
+                      self.updateUI('Uploading: ' + Math.round(percentComplete) + "%", percentComplete);
                       console.log(percentComplete);
 
                     }
@@ -105,25 +107,22 @@ var FileUpload = {
 
                 switch(data.status) {
                     case 403:
-                        alert('You do not have permission to upload files');
-
-                     //   self.updateUI('You do not have permission to upload files', 0, 'error');
-
+                        self.setError('You do not have permission to upload files');
                         break;
 
                     case 413:
-                        alert('The file is too large for the server to accept');
-                        //self.updateUI('The file is too large for the server to accept', 0, 'error');
+                        // alert('The file is too large for the server to accept');
+                        self.setError('The file is too large for the server to accept'); 
                         break;
 
                     default:
-                        alert('An unexpected error occurred');
-                        //self.updateUI('An unexpected error occurred', 0, 'error');
+                        // alert('An unexpected error occurred');
+                        self.setError('An unexpected error occurred');
                         break;
                 }
 
 
-                self.reset();
+                // self.reset();
 
               });
           
@@ -153,7 +152,8 @@ var FileUpload = {
         
         $(this.element).find('.data-item').remove();
         
-        $(this.element).removeClass('has-file');
+        $(this.element).removeClass('has-file')
+        $(this.element).removeClass('error');
         this.updateUI(this.options.placeholder, 0);
 
         console.log(this.element);
@@ -171,6 +171,11 @@ var FileUpload = {
         $(this.element).find('.fileupload-text').html(text);
 
     },
+
+    setError: function(text) {
+        $(this.element).addClass('error').find('.fileupload-text').html(text);
+        
+    }
 
    
 

@@ -60,9 +60,25 @@
 
 .fileupload .fileupload-ui .fileupload-display .fileupload-text {
     position: relative;
-    z-index: 1;
+    z-index: 11;
 }
 
+.fileupload.error {
+    background: var(--danger) !important;
+}
+
+.fileupload.error .fileupload-progress {
+    right: 0 !important;
+   background: rgba(255,255,255, 0.9) !important;
+}
+
+.fileupload.error .fileupload-reset {
+    display: none !important;
+}
+
+.fileupload.error .fileupload-ui .fileupload-display .fileupload-text {
+    font-weight: bold;
+}
 
 .fileupload .fileupload-display .fileupload-progress {
 
@@ -79,7 +95,7 @@
 .fileupload .fileupload-reset {
     display: none;
     position: relative;
-    z-index: 5;
+    z-index: 11;
 }
 
 .fileupload.has-file .fileupload-reset {
