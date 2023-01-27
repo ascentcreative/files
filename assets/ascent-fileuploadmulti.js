@@ -77,7 +77,7 @@ var FileUploadMulti = {
         
 
          $(this.element).on('change', function() {
-            console.log('change handler');
+            // console.log('change handler');
             self.updateFileIndexes();
          });
         
@@ -101,8 +101,8 @@ var FileUploadMulti = {
             allowedSize: this.options.allowedSize
         });
         if(data) {
-            console.log('setting data');
-            console.log(data);
+            // console.log('setting data');
+            // console.log(data);
             $(item).fileuploadmultifile('setValue', data); //, data.id , data.original_name);
         }
 
@@ -155,8 +155,8 @@ var FileUploadMultiFile = {
     },
 
     _init: function() {
-        console.log("INIT FILE");
-        console.log('this', this.element);
+        // console.log("INIT FILE");
+        // console.log('this', this.element);
         var self = this;
 
         $(this.element).find('.fileupload-reset').on('click', function() {
@@ -172,13 +172,13 @@ var FileUploadMultiFile = {
 
     setValue: function(data) { //value, text) {
 
-        console.log(data);
+        // console.log(data);
         //$(this.element).find('.fileuploadmulti-id').val(value);
         //$(this.element).find('.fileuploadmulti-label').val(text);
 
           // create a load of hidden text fields, holding the data items (allows for changes to the model?)
         for(key in data) {
-            console.log(key);
+            // console.log(key);
             $(this.element).append('<input type="hidden" class="data-item" name="' + this.options.fieldname + '[9999][' + key + ']" value="' + data[key] + '">');
         }
 
@@ -198,8 +198,8 @@ var FileUploadMultiFile = {
         }
 
         var bar = $(this.element).find('.fileupload-progress');
-        console.log(bar);
-        console.log( (100 - pct) + '%');
+        // console.log(bar);
+        // console.log( (100 - pct) + '%');
         bar.css('right', (100 - pct) + '%');
 
         if (pct != 0) {
@@ -222,7 +222,7 @@ var FileUploadMultiFile = {
 
         let self = this;
 
-        console.log(self.options);
+        // console.log(self.options);
 
         if(self.options.allowedSize > 0 && file.size > self.options.allowedSize) {
             self.setError(file.name + ' is too big (' + self.formatBytes(file.size) + '). Max = ' + self.formatBytes(self.options.allowedSize) );
@@ -238,10 +238,10 @@ var FileUploadMultiFile = {
 
         $(document).on("chunkupload-progress", function(e, data) {
 
-            console.log(data.chunkerId + ' - ' + self.uploader.chunkerId);
+            // console.log(data.chunkerId + ' - ' + self.uploader.chunkerId);
                 
             if(data.chunkerId == self.uploader.chunkerId) {
-                console.log('progress found', e, data);
+                // console.log('progress found', e, data);
                 self.updateUI('Uploading: ' + data.filename, data.percentComplete);
                 $(self.element).trigger('change');
             }
@@ -251,7 +251,7 @@ var FileUploadMultiFile = {
         $(document).on("chunkupload-complete", function(e, data) {
 
             if(data.chunkerId == self.uploader.chunkerId) {
-                console.log('comlpete found', e, data);
+                // console.log('comlpete found', e, data);
                 self.setValue(data.filemodel);
                 $(self.element).trigger('change');
                 // self.updateUI('Uploading: ' + Math.round(data.percentComplete) + "%", data.percentComplete);
