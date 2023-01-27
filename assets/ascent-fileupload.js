@@ -12,11 +12,12 @@ var FileUpload = {
         disk: 'files',
         path: '',
         preserveFilename: false,
-        placeholder: 'Choose file'
+        placeholder: 'Choose file',
+        chunkSize: null,
+        allowedSize: 0
     },
     
     _init: function () {
-
         
         var self = this;
         this.widget = this;
@@ -36,6 +37,8 @@ var FileUpload = {
         this.options.disk = $(obj).data('disk');
         this.options.path = $(obj).data('path');
         this.options.preserveFilename = $(obj).data('preservefilename');
+        this.options.chunkSize = $(obj).data('chunksize');
+        this.options.allowedSize = $(obj).data('allowedsize');
         // console.log($(obj).data());
 
         upl = $(this.element).find('input[type="file"]');
@@ -61,70 +64,107 @@ var FileUpload = {
 
             self.reset();
 
-            var formData = new FormData(); 
-            formData.append('payload', this.files[0]); 
-            formData.append('disk', self.options.disk);
-            formData.append('path', self.options.path);
-            formData.append('preserveFilename', self.options.preserveFilename?1:0);
+            if(self.options.allowedSize > 0 && this.files[0].size > self.options.allowedSize) {
+                self.setError(this.files[0].name + ' is too big (' + self.formatBytes(this.files[0].size) + '). Max = ' + self.formatBytes(self.options.allowedSize) );
+                return;
+            }
 
-            $.ajax({
-                xhr: function()
-                {
-                    
-                  var xhr = new window.XMLHttpRequest();
-                  
-                  //self.setUploadState();
-                  //Upload progress
-                  xhr.upload.addEventListener("progress", function(evt){
+            uploader = new ChunkableUploader({
+                'disk': self.options.disk,
+                'path': self.options.path,
+                'preserveFilename': self.options.preserveFilename?1:0,
+                'chunkSize': self.options.chunkSize
+            });
+
+            $(document).on("chunkupload-progress", function(e, data) {
                 
-                    if (evt.lengthComputable) {
-                      var percentComplete = (evt.loaded / evt.total) * 100;
-                      //Do something with upload progress
-                      //prog.find('PROGRESS').attr('value', percentComplete);
-                      self.updateUI('Uploading: ' + Math.round(percentComplete) + "%", percentComplete);
-                      console.log(percentComplete);
-
-                    }
-                  }, false);
-                  return xhr;
-                },cache: false,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                url: "/file-upload",
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                
-              }).done(function(data, xhr, requesr){
-
-                    self.setValue(data);
-
+                if(data.chunkerId == uploader.chunkerId) {
+                    console.log('progress found', e, data);
+                    self.updateUI('Uploading: ' + data.filename + ' (' + Math.round(data.percentComplete) + "%)", data.percentComplete);
                     $(self.element).trigger('change');
-                  
-              }).fail(function (data) {
-
-                switch(data.status) {
-                    case 403:
-                        self.setError('You do not have permission to upload files');
-                        break;
-
-                    case 413:
-                        // alert('The file is too large for the server to accept');
-                        self.setError('The file is too large for the server to accept'); 
-                        break;
-
-                    default:
-                        // alert('An unexpected error occurred');
-                        self.setError('An unexpected error occurred');
-                        break;
                 }
 
+            });
 
-                // self.reset();
+            $(document).on("chunkupload-complete", function(e, data) {
 
-              });
+                if(data.chunkerId == uploader.chunkerId) {
+                    console.log('comlpete found', e, data);
+                    self.setValue(data.filemodel);
+                    $(self.element).trigger('change');
+                    // self.updateUI('Uploading: ' + Math.round(data.percentComplete) + "%", data.percentComplete);
+                }
+
+            });
+
+            $(document).on("chunkupload-error", function(e, data) {
+
+                if(data.chunkerId == uploader.chunkerId) {
+                    self.setError(data.message);
+                }
+
+            });
+
+            uploader.upload(this.files[0]);
+
+            // $.ajax({
+            //     xhr: function()
+            //     {
+                    
+            //       var xhr = new window.XMLHttpRequest();
+                  
+            //       //self.setUploadState();
+            //       //Upload progress
+            //       xhr.upload.addEventListener("progress", function(evt){
+                
+            //         if (evt.lengthComputable) {
+            //           var percentComplete = (evt.loaded / evt.total) * 100;
+            //           //Do something with upload progress
+            //           //prog.find('PROGRESS').attr('value', percentComplete);
+            //           self.updateUI('Uploading: ' + Math.round(percentComplete) + "%", percentComplete);
+            //           console.log(percentComplete);
+
+            //         }
+            //       }, false);
+            //       return xhr;
+            //     },cache: false,
+            //     contentType: false,
+            //     processData: false,
+            //     type: 'POST',
+            //     url: "/file-upload",
+            //     data: formData,
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     }
+                
+            //   }).done(function(data, xhr, requesr){
+
+            //         self.setValue(data);
+
+            //         $(self.element).trigger('change');
+                  
+            //   }).fail(function (data) {
+
+            //     switch(data.status) {
+            //         case 403:
+            //             self.setError('You do not have permission to upload files');
+            //             break;
+
+            //         case 413:
+            //             // alert('The file is too large for the server to accept');
+            //             self.setError('The file is too large for the server to accept'); 
+            //             break;
+
+            //         default:
+            //             // alert('An unexpected error occurred');
+            //             self.setError('An unexpected error occurred');
+            //             break;
+            //     }
+
+
+            //     // self.reset();
+
+            //   });
           
 
         });
@@ -175,6 +215,19 @@ var FileUpload = {
     setError: function(text) {
         $(this.element).addClass('error').find('.fileupload-text').html(text);
         
+    },
+
+    formatBytes: function(bytes) {
+
+        var sizes = [' Bytes', ' KB', ' MB', ' GB',
+                    ' TB', ' PB', ' EB', ' ZB', ' YB'];
+            
+        for (var i = 1; i < sizes.length; i++) {
+            if (bytes < Math.pow(1024, i))
+            return (Math.round((bytes / Math.pow(
+                1024, i - 1)) * 100) / 100) + sizes[i - 1];
+        }
+        return bytes;
     }
 
    

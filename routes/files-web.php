@@ -2,10 +2,75 @@
 
 use AscentCreative\Files\Models\File;
 
+use Illuminate\Http\File as HttpFile;
+
 
 Route::middleware(['web'])->group(function() {
+
+
+    Route::post('/chunked-upload', function() {
+
+        $disk = Storage::disk(request()->disk);
+        $disk->makeDirectory('.tmp');
+
+        // open or create a temp file to store the incoming chunks
+        $chunkfile = '/.tmp/' . request()->chunkerId . '.part';
+        $chunkpath = $disk->path($chunkfile);
+        $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
+
+        // append the chunk to the file:
+        if ($out) {
+            $in = fopen($_FILES['payload']['tmp_name'], "rb");
+
+            if ($in) {
+                while ($buff = fread($in, 4096)) { fwrite($out, $buff); }
+            } else {
+                return response()->json(["ok"=>0, "info"=>'Failed to open input stream']);
+            }
+
+            fclose($in);
+            fclose($out);
+            unlink($_FILES['payload']['tmp_name']);
+        }
+
+        // if final chunk - move the completed file to storage
+        if(request()->chunkIdx == request()->chunkCount) {
+            
+            $payload = request()->file('payload');
+            $sanitise = $payload->getClientOriginalName();
+            $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
+
+            // Store image on disk.
+            if(request()->preserveFilename) {
+                $path = $disk->putFileAs('/' . request()->path, new HttpFile($chunkpath),  $sanitise);
+            } else {
+                $path = $disk->putFile('/' . request()->path, new HttpFile($chunkpath));
+            }
+
+             // Create a File model, but don't save it - Return as JSON.
+            $file = new File();
+            $file->disk = request()->disk; //'files';
+            $file->hashed_filename = $path; //pathinfo($path)['basename']; 
+
+            $file->original_filename = $sanitise; 
+            $file->size = $disk->size($path);
+            $file->mime_type = $disk->mimeType($path);
+
+            unlink($chunkpath); // remove temp file
+
+            return response()->json($file);
+
+        }
+
+        return response()->json(request()->all());
+
+    })->middleware('auth', 'can:upload-files');
+
+
+
+
     
-    Route::post('/file-upload', function($spec=null) {
+    Route::post('/file-upload', function() {
 
         $params = request()->all();
 

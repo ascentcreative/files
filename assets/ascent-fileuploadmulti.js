@@ -14,7 +14,9 @@ var FileUploadMulti = {
         path: 'fileuploads',
         preserveFilename: 1,
         placeholder: 'Choose file',
-        sortable: false
+        sortable: false,
+        chunkSize: null,
+        allowedSize: 0
     },
     
     _init: function () {
@@ -34,6 +36,8 @@ var FileUploadMulti = {
         this.options.path = $(obj).data('path');
         this.options.preserveFilename = $(obj).data('preservefilename');
         this.options.data = obj.data('value');
+        this.options.chunkSize = $(obj).data('chunksize');
+        this.options.allowedSize = $(obj).data('allowedsize');
 
         if(this.options.data) {
             for(file in this.options.data) {
@@ -92,7 +96,9 @@ var FileUploadMulti = {
             disk: this.options.disk,
             path: this.options.path,
             preserveFilename: this.options.preserveFilename,
-            fieldname: this.element.attr('name')
+            fieldname: this.element.attr('name'),
+            chunkSize: this.options.chunkSize,
+            allowedSize: this.options.allowedSize
         });
         if(data) {
             console.log('setting data');
@@ -143,7 +149,9 @@ var FileUploadMultiFile = {
         disk: 'public',
         path: 'fileuploads',
         preserveFilename: false,
-        fieldname: ''
+        fieldname: '',
+        chunkSize: null,
+        allowedSize: 0
     },
 
     _init: function() {
@@ -200,101 +208,168 @@ var FileUploadMultiFile = {
 
     upload: function(file) {
 
-        var self = this;
+        let self = this;
 
-      
-        var formData = new FormData(); 
-        formData.append('payload', file); 
-        formData.append('disk', self.options.disk);
-        formData.append('path', self.options.path);
-        formData.append('preserveFilename', self.options.preserveFilename);
-       
+        console.log(self.options);
 
-        $.ajax({
-            xhr: function()
-            {
+        if(self.options.allowedSize > 0 && file.size > self.options.allowedSize) {
+            self.setError(file.name + ' is too big (' + self.formatBytes(file.size) + '). Max = ' + self.formatBytes(self.options.allowedSize) );
+            return;
+        }
+
+        this.uploader = new ChunkableUploader({
+            'disk': self.options.disk,
+            'path': self.options.path,
+            'preserveFilename': self.options.preserveFilename?1:0,
+            'chunkSize': self.options.chunkSize
+        });
+
+        $(document).on("chunkupload-progress", function(e, data) {
+
+            console.log(data.chunkerId + ' - ' + self.uploader.chunkerId);
                 
-            var xhr = new window.XMLHttpRequest();
-                
-                //self.setUploadState();
-                //Upload progress
-                xhr.upload.addEventListener("progress", function(evt){
-                
-                    if (evt.lengthComputable) {
-                    var percentComplete = (evt.loaded / evt.total) * 100;
-                    //Do something with upload progress
-                    //prog.find('PROGRESS').attr('value', percentComplete);
-                    self.updateUI('Uploading: ' + Math.round(percentComplete) + "%", percentComplete);
-                    console.log(percentComplete);
-
-                    }
-                }, false);
-                return xhr;
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            url: "/file-upload",
-            data: formData,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-
-        }).done(function(data, xhr, request){
-
-                
-                //Do something success-ish
-                //$(obj).parents('FORM').unbind('submit', blocksubmit);
-                //console.log(data);
-                // $('INPUT[type=submit]').prop('disabled', false).val($('INPUT[type="submit"]').data('oldval')).css('opacity', 1);
-                // prog.remove();
-                // upl.remove();
-
-            // self.updateUI(data.original_name + ' : Upload Complete', 0, 'value');
-                //$(self.element).find('.fileupload-value').val(data.id);
-                self.setValue(data); //data.id, data.original_name);
-
-                console.log(data);
-
+            if(data.chunkerId == self.uploader.chunkerId) {
+                console.log('progress found', e, data);
+                self.updateUI('Uploading: ' + data.filename + ' (' + Math.round(data.percentComplete) + "%)", data.percentComplete);
                 $(self.element).trigger('change');
-
-
-                //   var result = $.parseJSON(data);
-                //   //console.log(result);
-                //   if(result['result'] == 'OK') {
-                //       obj.find('#' + self.fldName + '-filename').val(result['file']);
-                //       self.setCompleteState();
-                //   } else {
-                    
-                //   }
-
-            
-        }).fail(function (data) {
-
-            switch(data.status) {
-                case 403:
-                    self.setError('You do not have permission to upload files');
-
-                //   self.updateUI('You do not have permission to upload files', 0, 'error');
-
-                    break;
-
-                case 413:
-                    self.setError('The file is too large for the server to accept');
-                    //self.updateUI('The file is too large for the server to accept', 0, 'error');
-                    break;
-
-                default:
-                    self.setError('An unexpected error occurred');
-                    //self.updateUI('An unexpected error occurred', 0, 'error');
-                    break;
             }
 
         });
 
+        $(document).on("chunkupload-complete", function(e, data) {
 
+            if(data.chunkerId == self.uploader.chunkerId) {
+                console.log('comlpete found', e, data);
+                self.setValue(data.filemodel);
+                $(self.element).trigger('change');
+                // self.updateUI('Uploading: ' + Math.round(data.percentComplete) + "%", data.percentComplete);
+            }
+
+        });
+
+        $(document).on("chunkupload-error", function(e, data) {
+
+            if(data.chunkerId == self.uploader.chunkerId) {
+                self.setError(data.message);
+            }
+
+        });
+
+        this.uploader.upload(file);
+
+    },
+
+    formatBytes: function(bytes) {
+
+        var sizes = [' Bytes', ' KB', ' MB', ' GB',
+                    ' TB', ' PB', ' EB', ' ZB', ' YB'];
+            
+        for (var i = 1; i < sizes.length; i++) {
+            if (bytes < Math.pow(1024, i))
+            return (Math.round((bytes / Math.pow(
+                1024, i - 1)) * 100) / 100) + sizes[i - 1];
+        }
+        return bytes;
     }
+
+
+    // oldupload: function(file) {
+
+    //     var self = this;
+
+      
+    //     var formData = new FormData(); 
+    //     formData.append('payload', file); 
+    //     formData.append('disk', self.options.disk);
+    //     formData.append('path', self.options.path);
+    //     formData.append('preserveFilename', self.options.preserveFilename);
+       
+
+    //     $.ajax({
+    //         xhr: function()
+    //         {
+                
+    //         var xhr = new window.XMLHttpRequest();
+                
+    //             //self.setUploadState();
+    //             //Upload progress
+    //             xhr.upload.addEventListener("progress", function(evt){
+                
+    //                 if (evt.lengthComputable) {
+    //                 var percentComplete = (evt.loaded / evt.total) * 100;
+    //                 //Do something with upload progress
+    //                 //prog.find('PROGRESS').attr('value', percentComplete);
+    //                 self.updateUI('Uploading: ' + Math.round(percentComplete) + "%", percentComplete);
+    //                 console.log(percentComplete);
+
+    //                 }
+    //             }, false);
+    //             return xhr;
+    //         },
+    //         cache: false,
+    //         contentType: false,
+    //         processData: false,
+    //         type: 'POST',
+    //         url: "/file-upload",
+    //         data: formData,
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         }
+
+    //     }).done(function(data, xhr, request){
+
+                
+    //             //Do something success-ish
+    //             //$(obj).parents('FORM').unbind('submit', blocksubmit);
+    //             //console.log(data);
+    //             // $('INPUT[type=submit]').prop('disabled', false).val($('INPUT[type="submit"]').data('oldval')).css('opacity', 1);
+    //             // prog.remove();
+    //             // upl.remove();
+
+    //         // self.updateUI(data.original_name + ' : Upload Complete', 0, 'value');
+    //             //$(self.element).find('.fileupload-value').val(data.id);
+    //             self.setValue(data); //data.id, data.original_name);
+
+    //             console.log(data);
+
+    //             $(self.element).trigger('change');
+
+
+    //             //   var result = $.parseJSON(data);
+    //             //   //console.log(result);
+    //             //   if(result['result'] == 'OK') {
+    //             //       obj.find('#' + self.fldName + '-filename').val(result['file']);
+    //             //       self.setCompleteState();
+    //             //   } else {
+                    
+    //             //   }
+
+            
+    //     }).fail(function (data) {
+
+    //         switch(data.status) {
+    //             case 403:
+    //                 self.setError('You do not have permission to upload files');
+
+    //             //   self.updateUI('You do not have permission to upload files', 0, 'error');
+
+    //                 break;
+
+    //             case 413:
+    //                 self.setError('The file is too large for the server to accept');
+    //                 //self.updateUI('The file is too large for the server to accept', 0, 'error');
+    //                 break;
+
+    //             default:
+    //                 self.setError('An unexpected error occurred');
+    //                 //self.updateUI('An unexpected error occurred', 0, 'error');
+    //                 break;
+    //         }
+
+    //     });
+
+
+    // }
 
 }
 

@@ -78,4 +78,9 @@
 
 .fileuploadmulti-ui.error .fileupload-progress {
     background: rgba(255, 255,255,0.9) !important;
+    right: 0 !important;
+}
+
+.fileuploadmulti-ui.error .fileupload-text {
+    font-weight: bold;
 }

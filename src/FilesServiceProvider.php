@@ -46,6 +46,8 @@ class FilesServiceProvider extends ServiceProvider
     $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
 
+    packageAssets()->addScript('/vendor/ascent/files/ChunkableUploader.js');
+
     packageAssets()->addStylesheet('/vendor/ascent/files/ascent-fileupload.css');
     packageAssets()->addScript('/vendor/ascent/files/ascent-fileupload.js');
 

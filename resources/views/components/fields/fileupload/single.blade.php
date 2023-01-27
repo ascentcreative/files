@@ -11,6 +11,8 @@
             data-path="{{ $path }}"
             data-preservefilename="{{ $preserveFilename ? 'true':'false' }}"
             data-value="{{ json_encode($value) }}"
+            data-chunksize="{{ $chunkSize }}"
+            data-allowedsize="{{ $allowedSize }}"
         >
 
         <input type="file" class="fileupload-file" @if($accept) accept="{{ join(',', $accept) }}" @endif id="{{nameToId($name)}}-upload">
