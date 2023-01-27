@@ -43,7 +43,7 @@ var FileUpload = {
 
         upl = $(this.element).find('input[type="file"]');
 
-        console.log($(this.element).data());
+        // console.log($(this.element).data());
 
         // alert('init uplaoder');
 
@@ -79,7 +79,7 @@ var FileUpload = {
             $(document).on("chunkupload-progress", function(e, data) {
                 
                 if(data.chunkerId == uploader.chunkerId) {
-                    console.log('progress found', e, data);
+                    // console.log('progress found', e, data);
                     self.updateUI('Uploading: ' + data.filename, data.percentComplete);
                     $(self.element).trigger('change');
                 }
@@ -89,7 +89,7 @@ var FileUpload = {
             $(document).on("chunkupload-complete", function(e, data) {
 
                 if(data.chunkerId == uploader.chunkerId) {
-                    console.log('comlpete found', e, data);
+                    // console.log('comlpete found', e, data);
                     self.setValue(data.filemodel);
                     $(self.element).trigger('change');
                     // self.updateUI('Uploading: ' + Math.round(data.percentComplete) + "%", data.percentComplete);
@@ -179,7 +179,7 @@ var FileUpload = {
 
          // create a load of hidden text fields, holding the data items (allows for changes to the model?)
         for(key in data) {
-            console.log(key);
+            // console.log(key);
             $(this.element).append('<input type="hidden" class="data-item" name="' + $(this.element).data('fieldname') + '[' + key + ']" value="' + data[key] + '">');
         }
         
@@ -196,7 +196,7 @@ var FileUpload = {
         $(this.element).removeClass('error');
         this.updateUI(this.options.placeholder, 0);
 
-        console.log(this.element);
+        // console.log(this.element);
 
         $(this.element).trigger('change');
     },
@@ -208,8 +208,7 @@ var FileUpload = {
         }
 
         var bar = $(this.element).find('.fileupload-progress');
-        console.log(bar);
-        console.log( (100 - pct) + '%');
+      
         bar.css('right', (100 - pct) + '%');
 
         if (pct != 0) {

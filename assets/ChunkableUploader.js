@@ -11,7 +11,7 @@ class ChunkableUploader {
             this[item] = data[item];
         }
 
-        console.log(this);
+        // console.log(this);
     }
 
 
@@ -37,7 +37,7 @@ class ChunkableUploader {
 
     uploadChunk(idx=1) {
 
-        console.log('Starting chunk ' + idx);
+        // console.log('Starting chunk ' + idx);
 
         if(idx > this.chunkCount) {
             throw new Error('Chunk ' + idx + ' out of bounds');
@@ -110,7 +110,7 @@ class ChunkableUploader {
                   
             }).fail(function (data) {
 
-                console.log('ERROR', data);
+                // console.log('ERROR', data);
 
                 let message = ''
 
