@@ -13,8 +13,10 @@ Route::middleware(['web'])->group(function() {
         $disk = Storage::disk(request()->disk);
         $disk->makeDirectory('.tmp');
 
+        // dd("fweuffwe");
+
         // open or create a temp file to store the incoming chunks
-        $chunkfile = '/.tmp/' . request()->chunkerId . '.part';
+        $chunkfile = '/.tmp/' . request()->chunkerId . '.' . request()->file('payload')->extension();
         $chunkpath = $disk->path($chunkfile);
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
@@ -37,26 +39,42 @@ Route::middleware(['web'])->group(function() {
         if(request()->chunkIdx == request()->chunkCount) {
             
             $payload = request()->file('payload');
+
+            // dd($payload);
             $sanitise = $payload->getClientOriginalName();
             $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
 
-            // Store image on disk.
-            if(request()->preserveFilename) {
-                $path = $disk->putFileAs('/' . request()->path, new HttpFile($chunkpath),  $sanitise);
-            } else {
-                $path = $disk->putFile('/' . request()->path, new HttpFile($chunkpath));
+            // // Store image on disk.
+            $dest = request()->path;
+            if ($dest != '') {
+                $dest .= '/';
             }
+            if(request()->preserveFilename) {
+                $dest .= $santise;
+            } else {
+                $tempfile = new HttpFile($chunkpath);
+                $dest .= $tempfile->hashName();
+            }
+            //     $path = $disk->putFileAs('/' . request()->path, new HttpFile($chunkpath),  $sanitise);
+            // } else {
+            //     $path = $disk->putFile('/' . request()->path, new HttpFile($chunkpath));
+            // }
+
+            // dd($chunkfile);
+            // dd($dest);
+
+            $disk->move($chunkfile, $dest);
 
              // Create a File model, but don't save it - Return as JSON.
             $file = new File();
             $file->disk = request()->disk; //'files';
-            $file->hashed_filename = $path; //pathinfo($path)['basename']; 
+            $file->hashed_filename = $dest; //$path; //pathinfo($path)['basename']; 
 
             $file->original_filename = $sanitise; 
-            $file->size = $disk->size($path);
-            $file->mime_type = $disk->mimeType($path);
+            // $file->size = $disk->size($dest);
+            // $file->mime_type = $disk->mimeType($dest);
 
-            unlink($chunkpath); // remove temp file
+            // unlink($chunkpath); // remove temp file
 
             return response()->json($file);
 
