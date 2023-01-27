@@ -191,12 +191,24 @@ var FileUploadMultiFile = {
     },
 
 
-    updateUI: function(text, pct=0) {
+    updateUI: function(text, pct=null) {
+
+        if (pct != 0) {
+            pct = Math.min(Math.round(pct), 100);
+        }
 
         var bar = $(this.element).find('.fileupload-progress');
         console.log(bar);
         console.log( (100 - pct) + '%');
         bar.css('right', (100 - pct) + '%');
+
+        if (pct != 0) {
+            if(pct == 100) {
+                text = text + ' <strong>(Processing - please wait...)</strong>';
+            } else {
+                text = text + ' (' + pct + "%)";
+            }
+        }
 
         $(this.element).find('.fileupload-text').html(text);
 
@@ -230,7 +242,7 @@ var FileUploadMultiFile = {
                 
             if(data.chunkerId == self.uploader.chunkerId) {
                 console.log('progress found', e, data);
-                self.updateUI('Uploading: ' + data.filename + ' (' + Math.round(data.percentComplete) + "%)", data.percentComplete);
+                self.updateUI('Uploading: ' + data.filename, data.percentComplete);
                 $(self.element).trigger('change');
             }
 
