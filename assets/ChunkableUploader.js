@@ -67,7 +67,8 @@ class ChunkableUploader {
                 var xhr = new window.XMLHttpRequest();
                 
                 //Upload progress
-                xhr.upload.addEventListener("progress", function(evt){
+                // xhr.upload.addEventListener("progress", function(evt){
+                xhr.onprogress = function(evt) {
 
                     console.log(evt);
             
@@ -84,7 +85,7 @@ class ChunkableUploader {
                     });
 
                     // }
-                }, false);
+                }; //, false);
                 return xhr;
             },
             cache: false,

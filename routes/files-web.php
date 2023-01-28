@@ -22,21 +22,21 @@ Route::middleware(['web'])->group(function() {
         $chunkpath = $disk->path($chunkfile);
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
-        Log::debug(request()->chunkerId . ': Receiving chunk ' . request()->chunkIdx . ' of ' . request()->chunkCount);
+        // Log::debug(request()->chunkerId . ': Receiving chunk ' . request()->chunkIdx . ' of ' . request()->chunkCount);
 
-        Log::debug(request()->chunkerId . ': Request params: ' . print_r(request()->all(), true));
+        // Log::debug(request()->chunkerId . ': Request params: ' . print_r(request()->all(), true));
 
-        Log::debug(request()->chunkerId . ': File params: ' . print_r($_FILES, true));
+        // Log::debug(request()->chunkerId . ': File params: ' . print_r($_FILES, true));
 
-        Log::debug(request()->chunkerId . ': chunkfile = ' . $chunkfile);
+        // Log::debug(request()->chunkerId . ': chunkfile = ' . $chunkfile);
 
-        Log::debug(request()->chunkerId . ': ext = ' . pathinfo($_FILES['payload']['name'], PATHINFO_EXTENSION));
+        // Log::debug(request()->chunkerId . ': ext = ' . pathinfo($_FILES['payload']['name'], PATHINFO_EXTENSION));
         
 
         // append the chunk to the file:
         if ($out) {
 
-            Log::debug(request()->chunkerId . ': TMP = ' . $_FILES['payload']['tmp_name']);
+            // Log::debug(request()->chunkerId . ': TMP = ' . $_FILES['payload']['tmp_name']);
 
             $in = fopen($_FILES['payload']['tmp_name'], "rb");
 
@@ -79,7 +79,7 @@ Route::middleware(['web'])->group(function() {
             // dd($chunkfile);
             // dd($dest);
 
-            Log::debug(request()->chunkerId . ': Moving file from ' . $chunkfile . ' to ' . $dest);
+            // Log::debug(request()->chunkerId . ': Moving file from ' . $chunkfile . ' to ' . $dest);
 
             $disk->move($chunkfile, $dest);
 
