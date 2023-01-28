@@ -11,12 +11,14 @@ Route::middleware(['web'])->group(function() {
     Route::post('/chunked-upload', function() {
 
         $disk = Storage::disk(request()->disk);
-        $disk->makeDirectory('.tmp');
-
-        // dd("fweuffwe");
+        // $disk->makeDirectory('.tmp');
 
         // open or create a temp file to store the incoming chunks
-        $chunkfile = '/.tmp/' . request()->chunkerId . '.' . request()->file('payload')->extension();
+        $path = request()->path;
+        if ($path != '') {
+            $path .= '/';
+        }
+        $chunkfile = $path . request()->chunkerId . '.' . request()->file('payload')->extension();
         $chunkpath = $disk->path($chunkfile);
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
@@ -45,10 +47,7 @@ Route::middleware(['web'])->group(function() {
             $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
 
             // // Store image on disk.
-            $dest = request()->path;
-            if ($dest != '') {
-                $dest .= '/';
-            }
+            $dest = $path;
             if(request()->preserveFilename) {
                 $dest .= $santise;
             } else {
