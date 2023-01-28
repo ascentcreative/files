@@ -31,6 +31,15 @@ class ChunkableUploader {
         
         this.uploadChunk();
 
+
+        $(document).trigger('chunkupload-progress', {
+            chunkerId: this.chunkerId,
+            percentComplete: 0,
+            loaded: 0,
+            total: this.file.size,
+            filename: this.file.name
+        });
+
     }
 
 
