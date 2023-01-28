@@ -47,6 +47,8 @@ class ChunkableUploader {
         let uploader = this;
         let chunk = this.makeChunk(idx);
 
+        
+
         var formData = new FormData(); 
         formData.append('payload', chunk, this.file.name); 
         formData.append('chunkIdx', idx);
