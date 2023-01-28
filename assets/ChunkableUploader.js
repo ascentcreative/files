@@ -69,7 +69,7 @@ class ChunkableUploader {
                 //Upload progress
                 xhr.upload.addEventListener("progress", function(evt){
 
-                    // console.log(evt);
+                    console.log(evt);
             
                     // calc overall percentage:
                     let prevChunks = uploader.chunkSize * (idx-1);
