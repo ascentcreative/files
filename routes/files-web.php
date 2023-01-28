@@ -18,12 +18,26 @@ Route::middleware(['web'])->group(function() {
         if ($path != '') {
             $path .= '/';
         }
-        $chunkfile = $path . request()->chunkerId . '.' . request()->file('payload')->extension();
+        $chunkfile = $path . request()->chunkerId . '.' . pathinfo($_FILES['payload']['name'], PATHINFO_EXTENSION);
         $chunkpath = $disk->path($chunkfile);
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
+        Log::debug(request()->chunkerId . ': Receiving chunk ' . request()->chunkIdx . ' of ' . request()->chunkCount);
+
+        Log::debug(request()->chunkerId . ': Request params: ' . print_r(request()->all(), true));
+
+        Log::debug(request()->chunkerId . ': File params: ' . print_r($_FILES, true));
+
+        Log::debug(request()->chunkerId . ': chunkfile = ' . $chunkfile);
+
+        Log::debug(request()->chunkerId . ': ext = ' . pathinfo($_FILES['payload']['name'], PATHINFO_EXTENSION));
+        
+
         // append the chunk to the file:
         if ($out) {
+
+            Log::debug(request()->chunkerId . ': TMP = ' . $_FILES['payload']['tmp_name']);
+
             $in = fopen($_FILES['payload']['tmp_name'], "rb");
 
             if ($in) {
@@ -54,6 +68,9 @@ Route::middleware(['web'])->group(function() {
                 $tempfile = new HttpFile($chunkpath);
                 $dest .= $tempfile->hashName();
             }
+
+
+
             //     $path = $disk->putFileAs('/' . request()->path, new HttpFile($chunkpath),  $sanitise);
             // } else {
             //     $path = $disk->putFile('/' . request()->path, new HttpFile($chunkpath));
@@ -61,6 +78,8 @@ Route::middleware(['web'])->group(function() {
 
             // dd($chunkfile);
             // dd($dest);
+
+            Log::debug(request()->chunkerId . ': Moving file from ' . $chunkfile . ' to ' . $dest);
 
             $disk->move($chunkfile, $dest);
 
