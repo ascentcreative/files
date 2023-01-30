@@ -23,15 +23,17 @@ Route::middleware(['web'])->group(function() {
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
 
-        $chk = md5_file($_FILES['payload']['tmp_name']);
+        /** Checksum test */
+        // $chk = md5_file($_FILES['payload']['tmp_name']);
 
-        Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Checksum = ' . $chk);
+        // Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Checksum = ' . $chk);
 
-        Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Supplied Checksum = ' . request()->chunkChecksum);
+        // Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Supplied Checksum = ' . request()->chunkChecksum);
 
-        if($chk != request()->chunkChecksum) {
-            Log::debug(request()->chunkerId . ': ***CHECKSUM MISMATCH***');
-        }
+        // if($chk != request()->chunkChecksum) {
+        //     Log::debug(request()->chunkerId . ': ***CHECKSUM MISMATCH***');
+        // }
+        /** End Checksum Test */
 
 
         // Log::debug(request()->chunkerId . ': Receiving chunk ' . request()->chunkIdx . ' of ' . request()->chunkCount);
