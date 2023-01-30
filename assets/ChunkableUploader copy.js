@@ -28,26 +28,6 @@ class ChunkableUploader {
         //     this.makeChunk(i);
         //     i++;
         // }   
-
-    //     let uploader = this;
-
-    //     // work out the file checksum:
-    //     let reader = new FileReader();
-    //     reader.onload = function(e)  {
-    //         data = e.target.result;
-    //         uploader.checksum = md5(data);
-    //         console.log('File Checksum: ' + uploader.checksum);
-    //         uploader.startUpload();
-    //     };
-
-    //     reader.readAsBinaryString(file);
-
-    // }
-
-
-
-
-    // startUpload() {
         
         this.uploadChunk();
 
@@ -76,27 +56,7 @@ class ChunkableUploader {
         let uploader = this;
         let chunk = this.makeChunk(idx);
 
-
-        // work out the chunk checksum:
-        let reader = new FileReader();
-        reader.onload = function(e)  {
-            data = e.target.result;
-            // uploader.checksum = 
-            console.log('first: ' + data[0]);
-            console.log('last: ' + data[data.length - 1]);
-            console.log('Chunk Checksum: ' + md5(data));
-            uploader.doUploadChunk(chunk, idx, md5(data));
-        };
-
-        reader.readAsBinaryString(chunk);
-
-
-
-
-    }
-
-
-    doUploadChunk(chunk, idx, checksum) {
+        
 
         var formData = new FormData(); 
         formData.append('payload', chunk, this.file.name); 
@@ -108,18 +68,12 @@ class ChunkableUploader {
         formData.append('disk', this.disk);
         formData.append('path', this.path);
         formData.append('preserveFilename', this.preserveFilename);
-        // formData.append('fileChecksum', this.checksum);
-        formData.append('chunkChecksum', checksum);
 
 
         $.ajax({
             xhr: function() {
 
                 var xhr = new window.XMLHttpRequest();
-
-                xhr.onerror = function(evt) {
-                    console.log('Upload Error', evt);
-                }
                 
                 //Upload progress
                 // xhr.upload.addEventListener("progress", function(evt){

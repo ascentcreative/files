@@ -22,6 +22,18 @@ Route::middleware(['web'])->group(function() {
         $chunkpath = $disk->path($chunkfile);
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
+
+        $chk = md5_file($_FILES['payload']['tmp_name'])
+
+        Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Checksum = ' . $chk);
+
+        Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Supplied Checksum = ' . request()->chunkChecksum);
+
+        if($chk != request()->chunkChecksum) {
+            Log::debug(request()->chunkerId . ': ***CHECKSUM MISMATCH***');
+        }
+
+
         // Log::debug(request()->chunkerId . ': Receiving chunk ' . request()->chunkIdx . ' of ' . request()->chunkCount);
 
         // Log::debug(request()->chunkerId . ': Request params: ' . print_r(request()->all(), true));
@@ -41,7 +53,9 @@ Route::middleware(['web'])->group(function() {
             $in = fopen($_FILES['payload']['tmp_name'], "rb");
 
             if ($in) {
-                while ($buff = fread($in, 4096)) { fwrite($out, $buff); }
+                while ($buff = fread($in, 4096)) { 
+                    fwrite($out, $buff); 
+                }
             } else {
                 return response()->json(["ok"=>0, "info"=>'Failed to open input stream']);
             }
