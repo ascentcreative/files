@@ -117,13 +117,13 @@ class ChunkableUploader {
 
                 var xhr = new window.XMLHttpRequest();
 
-                xhr.onerror = function(evt) {
+                xhr.upload.addEventListener("error", function(evt) {
                     console.log('Upload Error', evt);
-                }
+                });
                 
                 //Upload progress
-                // xhr.upload.addEventListener("progress", function(evt){
-                xhr.onprogress = function(evt) {
+                xhr.upload.addEventListener("progress", function(evt){
+                // xhr.onprogress = function(evt) {
 
                     console.log(evt);
             
@@ -140,7 +140,7 @@ class ChunkableUploader {
                     });
 
                     // }
-                }; //, false);
+                }); //, false);
                 return xhr;
             },
             cache: false,
