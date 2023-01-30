@@ -29,6 +29,8 @@ class ChunkableUploader {
         //     i++;
         // }   
 
+
+     // ** Uncomment from here to enable file checksumming **    
     //     let uploader = this;
 
     //     // work out the file checksum:
@@ -43,11 +45,11 @@ class ChunkableUploader {
     //     reader.readAsBinaryString(file);
 
     // }
-
-
-
+     
 
     // startUpload() {
+
+        // ** Uncomment to here to enable file checksumming **
         
         this.uploadChunk();
 
@@ -77,26 +79,26 @@ class ChunkableUploader {
         let chunk = this.makeChunk(idx);
 
 
-        // work out the chunk checksum:
-        let reader = new FileReader();
-        reader.onload = function(e)  {
-            data = e.target.result;
-            // uploader.checksum = 
-            console.log('first: ' + data[0]);
-            console.log('last: ' + data[data.length - 1]);
-            console.log('Chunk Checksum: ' + md5(data));
-            uploader.doUploadChunk(chunk, idx, md5(data));
-        };
+    // ** Uncomment from here to enable chunk checksumming **
+    //      
+    //     // work out the chunk checksum:
+    //     let reader = new FileReader();
+    //     reader.onload = function(e)  {
+    //         data = e.target.result;
+    //         // uploader.checksum = 
+    //         console.log('first: ' + data[0]);
+    //         console.log('last: ' + data[data.length - 1]);
+    //         console.log('Chunk Checksum: ' + md5(data));
+    //         uploader.doUploadChunk(chunk, idx, md5(data));
+    //     };
 
-        reader.readAsBinaryString(chunk);
+    //     reader.readAsBinaryString(chunk);
+
+    // }
 
 
-
-
-    }
-
-
-    doUploadChunk(chunk, idx, checksum) {
+    // doUploadChunk(chunk, idx, checksum) {
+    // ** Uncomment to here to enable chunk checksumming **
 
         var formData = new FormData(); 
         formData.append('payload', chunk, this.file.name); 
@@ -108,8 +110,10 @@ class ChunkableUploader {
         formData.append('disk', this.disk);
         formData.append('path', this.path);
         formData.append('preserveFilename', this.preserveFilename);
+
+        // ** Uncomment to add checksums to posted data **
         // formData.append('fileChecksum', this.checksum);
-        formData.append('chunkChecksum', checksum);
+        // formData.append('chunkChecksum', checksum);
 
 
         $.ajax({
