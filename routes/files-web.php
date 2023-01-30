@@ -23,7 +23,7 @@ Route::middleware(['web'])->group(function() {
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
 
-        $chk = md5_file($_FILES['payload']['tmp_name'])
+        $chk = md5_file($_FILES['payload']['tmp_name']);
 
         Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Checksum = ' . $chk);
 
