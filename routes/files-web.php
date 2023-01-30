@@ -64,8 +64,10 @@ Route::middleware(['web'])->group(function() {
 
             fclose($in);
             fclose($out);
-            unset($in);
-            unset($out);
+            $in = null;
+            $out = null;
+            // unset($in);
+            // unset($out);
             // unset($shakeitallabout);
             unlink($_FILES['payload']['tmp_name']);
         }
