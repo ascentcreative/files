@@ -166,20 +166,32 @@ Route::middleware(['web'])->group(function() {
 
     /**
      * Route to access the file.
+     * NB - the FilePolicy will control access, and will look for the policy for the model the file is attached to.
      */
     Route::get('/getfile/{file:original_filename}', function(File $file) {
 
         return $file->download();
 
     })
-    // NB - the FilePolicy will control access, and will look for the policy for the model the file is attached to.
     ->can('download', 'file')
     ->name('file.url');
 
+
+    /**
+     * Route for streaming / ranged bytes:
+     * NB - the FilePolicy will control access, and will look for the policy for the model the file is attached to.
+     */
+    Route::get('/streamfile/{file:original_filename}', function (File $file) {
+
+        return $file->stream();
+    
+    })
+    ->can('download', 'file')
+    ->name('file.stream');
+
    
 
-    Route::get('/image/test', function() {
-        return view('images::test');
-    });
+    Route::get('/files/serverbrowser/{disk}', [\AscentCreative\Files\Controllers\ServerController::class, 'browse'])->name('files.server')->middleware('auth', 'can:browse-files');
+
 
 });
