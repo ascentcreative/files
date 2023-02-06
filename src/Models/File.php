@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Facades\Storage;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class File extends Model
 {
@@ -48,6 +49,18 @@ class File extends Model
         return Storage::disk($this->disk)->download($this->hashed_filename, $this->original_filename);
 
     }
+
+   
+    public function stream() {
+
+        $file = Storage::disk($this->disk)->path($this->hashed_filename);
+        $response = new BinaryFileResponse($file);
+        return $response;
+
+    }
+
+
+
 
     public function getSizeHumanAttribute() {
 
