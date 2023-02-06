@@ -53,6 +53,13 @@ class File extends Model
    
     public function stream() {
 
+        // LITESPEED can handle all the streaming for us
+        if(env('X_LITESPEED') == 1) {
+            return response()->xlitespeed(Storage::disk($this->disk)->path($this->hashed_filename), $this->original_filename); 
+        }
+
+        // Otherwise, fallback to Symfony's handler
+        // Any reason we can't use this for general stuff?
         $file = Storage::disk($this->disk)->path($this->hashed_filename);
         $response = new BinaryFileResponse($file);
         return $response;
