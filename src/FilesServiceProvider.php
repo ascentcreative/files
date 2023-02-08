@@ -83,7 +83,7 @@ class FilesServiceProvider extends ServiceProvider
       ], 'public');
 
       $this->publishes([
-        __DIR__.'/../config/images.php' => config_path('files.php'),
+        __DIR__.'/../config/files.php' => config_path('files.php'),
       ]);
 
 
