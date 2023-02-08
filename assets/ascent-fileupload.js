@@ -116,39 +116,32 @@ var FileUpload = {
         $(obj).addClass('initialised');
 
 
-            //         self.setValue(data);
-
-            //         $(self.element).trigger('change');
-                  
-            //   }).fail(function (data) {
-
-            //     switch(data.status) {
-            //         case 403:
-            //             self.setError('You do not have permission to upload files');
-            //             break;
-
-            //         case 413:
-            //             // alert('The file is too large for the server to accept');
-            //             self.setError('The file is too large for the server to accept'); 
-            //             break;
-
-            //         default:
-            //             // alert('An unexpected error occurred');
-            //             self.setError('An unexpected error occurred');
-            //             break;
-            //     }
-
-
-            //     // self.reset();
-
-            //   });
-          
-
-        });
+        // handlers for server browse popup:
         
-        $(obj).addClass('initialised');
+        // detect click on the link - register a handler for the "Select" button (+ maybe a dbl click on a file)
+
+        // - handler should obtain the data for the selected file to populate the field with
+
+        // Borrowed from HasMany to ensure all handlers are kept to a minimum:
+         /**
+             * Catches all the dialog close events and removes the handlers for this widget
+             * (Doesn't matter if it fires inbetween)
+             * (Tried using one(), but this means the handlers don't get removed if the modal is cancelled)
+             */
+        //  $(document).on('hidden.bs.modal', '#ajaxModal', self.clearHandlers);
 
 
+    },
+
+
+    // Borrowed from HasMany... need to implement
+     /**
+         * Remove the event handlers - the modal has closed, so we mustn't listen for events any longer
+         * Any events received may have come from other fields.
+         */
+     clearHandlers: function() {
+        // $(document).off('modal-link-response', self.appendItem );
+        // $(document).off('modal-link-response', self.replaceItem );
     },
 
     setValue: function(data) { //value, text) {
