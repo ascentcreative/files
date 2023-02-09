@@ -21,22 +21,22 @@ class File extends Model
     protected static function booted() {
         // delete on-disk file
         static::deleted(function ($model) {
-            //dd('deleting file');
-            // $model->file()->delete();
+            // ** TODO: Need a check that no other file records point to the same on-disk file
+            // ** and only delete where safe to do so.
             Storage::disk($model->disk)->delete($model->hashed_filename);
         });
     }
-
-
 
     public function attachedto() {
         return $this->morphTo();
     }
 
-  
-
-
     public function download() {
+
+        activity('files')
+            ->on($this)
+            ->event('download')
+            ->log('download');
 
         /**
          * Should we add a policy check here? or does that hogtie us?
@@ -53,6 +53,15 @@ class File extends Model
    
     public function stream() {
 
+        /** 
+         * NB - stream logging is problematic as it may be requested multiple times (byte ranges) or never (cached) 
+         * Suggest that logging of user interactions for streams would be better done as an AJAX call in the player
+         */
+        // activity('files')
+        //     ->on($this)
+        //     ->event('stream')
+        //     ->log('stream');
+
         // LITESPEED can handle all the streaming for us
         if(env('X_LITESPEED') == 1) {
             return response()->xlitespeed(Storage::disk($this->disk)->path($this->hashed_filename), $this->original_filename); 
@@ -65,8 +74,6 @@ class File extends Model
         return $response;
 
     }
-
-
 
 
     public function getSizeHumanAttribute() {
