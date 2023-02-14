@@ -7,11 +7,10 @@ use Illuminate\Http\File as HttpFile;
 
 Route::middleware(['web'])->group(function() {
 
-
+    // TODO - Read encrypted config data to avoid client-side bypassing of allowed max size etc.
     Route::post('/chunked-upload', function() {
 
         $disk = Storage::disk(request()->disk);
-        // $disk->makeDirectory('.tmp');
 
         // open or create a temp file to store the incoming chunks
         $path = request()->path;
@@ -23,34 +22,8 @@ Route::middleware(['web'])->group(function() {
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
 
 
-        /** Checksum test */
-        // $chk = md5_file($_FILES['payload']['tmp_name']);
-
-        // Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Checksum = ' . $chk);
-
-        // Log::debug(request()->chunkerId . ': Chunk #' . request()->chunkIdx . ' Supplied Checksum = ' . request()->chunkChecksum);
-
-        // if($chk != request()->chunkChecksum) {
-        //     Log::debug(request()->chunkerId . ': ***CHECKSUM MISMATCH***');
-        // }
-        /** End Checksum Test */
-
-
-        // Log::debug(request()->chunkerId . ': Receiving chunk ' . request()->chunkIdx . ' of ' . request()->chunkCount);
-
-        // Log::debug(request()->chunkerId . ': Request params: ' . print_r(request()->all(), true));
-
-        // Log::debug(request()->chunkerId . ': File params: ' . print_r($_FILES, true));
-
-        // Log::debug(request()->chunkerId . ': chunkfile = ' . $chunkfile);
-
-        // Log::debug(request()->chunkerId . ': ext = ' . pathinfo($_FILES['payload']['name'], PATHINFO_EXTENSION));
-        
-
         // append the chunk to the file:
         if ($out) {
-
-            // Log::debug(request()->chunkerId . ': TMP = ' . $_FILES['payload']['tmp_name']);
 
             $in = fopen($_FILES['payload']['tmp_name'], "rb");
 
@@ -66,9 +39,6 @@ Route::middleware(['web'])->group(function() {
             fclose($out);
             $in = null;
             $out = null;
-            // unset($in);
-            // unset($out);
-            // unset($shakeitallabout);
             unlink($_FILES['payload']['tmp_name']);
         }
 
@@ -90,18 +60,6 @@ Route::middleware(['web'])->group(function() {
                 $dest .= $tempfile->hashName();
             }
 
-
-
-            //     $path = $disk->putFileAs('/' . request()->path, new HttpFile($chunkpath),  $sanitise);
-            // } else {
-            //     $path = $disk->putFile('/' . request()->path, new HttpFile($chunkpath));
-            // }
-
-            // dd($chunkfile);
-            // dd($dest);
-
-            // Log::debug(request()->chunkerId . ': Moving file from ' . $chunkfile . ' to ' . $dest);
-
             $disk->move($chunkfile, $dest);
 
              // Create a File model, but don't save it - Return as JSON.
@@ -110,10 +68,8 @@ Route::middleware(['web'])->group(function() {
             $file->hashed_filename = $dest; //$path; //pathinfo($path)['basename']; 
 
             $file->original_filename = $sanitise; 
-            // $file->size = $disk->size($dest);
-            // $file->mime_type = $disk->mimeType($dest);
-
-            // unlink($chunkpath); // remove temp file
+            $file->size = $disk->size($dest);
+            $file->mime_type = $disk->mimeType($dest);
 
             return response()->json($file);
 

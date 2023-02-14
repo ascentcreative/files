@@ -23,6 +23,7 @@ class FilesServiceProvider extends ServiceProvider
 
     $this->commands([
         \AscentCreative\Files\Commands\Purge::class,
+        \AscentCreative\Files\Commands\PopulateAttributes::class,
         
     ]);
 

@@ -66,6 +66,9 @@ class FileUpload extends Component
             } else if (is_numeric($allowedSize)) {
                 $this->allowedSize = $allowedSize;
             }
+        } else {
+            // TODO - use a value from a config file
+            // Or, maybe we encode/encrypt a copy of the config, and the server cross checks that.... <- Yes. Do this.
         }
 
     }
