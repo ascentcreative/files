@@ -182,7 +182,7 @@ var FileUploadMultiFile = {
             $(this.element).append('<input type="hidden" class="data-item" name="' + this.options.fieldname + '[9999][' + key + ']" value="' + data[key] + '">');
         }
 
-        $(this.element).addClass('has-file');
+        $(this.element).removeClass('uploading').addClass('has-file');
         this.updateUI(data.original_filename, 0);
 
         // fire a change event
@@ -221,6 +221,8 @@ var FileUploadMultiFile = {
     upload: function(file) {
 
         let self = this;
+
+        $(self.element).addClass('uploading');
 
         // console.log(self.options);
 
