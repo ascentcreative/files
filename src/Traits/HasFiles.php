@@ -79,6 +79,7 @@ trait HasFiles {
      */
     public function saveMultiFiles($field, $data) {
 
+        dd($data);
 
         /** Sync the file models: */
         /** NB - this should use the $field as a key so we're only dealing with a specific subset of the file records. */

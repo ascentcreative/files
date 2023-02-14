@@ -50,13 +50,13 @@ trait HasGalleries {
         if(isset($data)) {
             foreach($data as $idx=>$row) {
 
-                $row['imageable_key'] = $field;
-                $row['imageable_sort'] = $idx;
+                $row['attachedto_key'] = $field;
+                $row['attachedto_sort'] = $idx;
 
     
                 $img = $this->images()->updateOrCreate(
                     [
-                        'id'=>$row['id'],
+                        'id'=>$row['id'] ?? null,
                     ],
                     $row
                 );
@@ -93,9 +93,9 @@ trait HasGalleries {
 
     public function images($key=null) {
         // dump("IMAGES:: " . $key);
-        $q = $this->morphMany(Image::class, 'imageable')->orderby('imageable_sort');
+        $q = $this->morphMany(Image::class, 'attachedto')->orderby('attachedto_sort');
         if($key) {
-            $q->where('imageable_key', $key);
+            $q->where('attachedto_key', $key);
         }
         return $q;
     }

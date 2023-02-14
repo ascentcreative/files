@@ -40,6 +40,11 @@ class FilesServiceProvider extends ServiceProvider
         'root' => storage_path('files'),
     ]]);
 
+    config(['filesystems.disks.images' => [
+        'driver' => 'local',
+        'root' => storage_path('images'),
+    ]]);
+
     $this->loadViewsFrom(__DIR__.'/../resources/views', 'files');
 
     $this->loadRoutesFrom(__DIR__.'/../routes/files-web.php');
@@ -67,6 +72,9 @@ class FilesServiceProvider extends ServiceProvider
   public function bootComponents() {
 
         Blade::component('files-fields-fileupload', 'AscentCreative\Files\Components\Fields\FileUpload');
+
+        Blade::component('files-fields-galleryupload', 'AscentCreative\Files\Components\Fields\GalleryUpload');
+
     
 
   }
@@ -85,6 +93,14 @@ class FilesServiceProvider extends ServiceProvider
 
       $this->publishes([
         __DIR__.'/../config/files.php' => config_path('files.php'),
+      ]);
+
+      $this->publishes([
+        __DIR__.'/../config/images.php' => config_path('images.php'),
+      ]);
+
+      $this->publishes([
+        __DIR__.'/../config/images-output.php' => config_path('images-output.php'),
       ]);
 
 

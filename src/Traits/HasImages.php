@@ -86,7 +86,7 @@ trait HasImages {
 
     public function image($key) {
         // dump("IMAGES:: " . $key);
-        $q = $this->morphOne(Image::class, 'imageable')->where('imageable_key', $key);
+        $q = $this->morphOne(Image::class, 'attachedto')->where('attachedto_key', $key);
         return $q;
     }
 

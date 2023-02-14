@@ -10,8 +10,8 @@ $.ascent = $.ascent?$.ascent:{};
 var FileUploadMulti = {
         
     options: {
-        disk: 'public',
-        path: 'fileuploads',
+        disk: 'files',
+        path: '',
         preserveFilename: 1,
         placeholder: 'Choose file',
         sortable: false,
@@ -118,8 +118,9 @@ var FileUploadMulti = {
         $(this.element).find('.fileuploadmulti-ui').each(function(index) {
             var prefix = fldname + "[" + index + "]";
             // console.log('prefix: ' + prefix);
+            console.log($(this).find("input"));
             $(this).find("input").each(function() {
-
+                console.log(this.name);
                 esc = fldname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 re = new RegExp(esc + "\\[\\d+\\]");
                this.name = this.name.replace(re, prefix);   

@@ -1,0 +1,75 @@
+INPUT.galleryupload-file {
+    display: none;
+}
+
+.galleryupload-ui.form-control {
+    height: auto !important;
+}
+
+
+.gallery-upload .galleryupload-display {
+    position: relative;
+}
+
+
+.ajaxuploadmulti .ajaxupload-ui .ajaxupload-display .ajaxupload-text {
+    position: relative;
+    z-index: 11;
+}
+
+
+.gallery-upload .galleryupload-display .galleryupload-progress {
+
+    position: absolute;
+    background: #efefef;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+
+}
+
+
+.gallery-upload .galleryupload-item {
+    float: left;
+    /* display: inline-block; */
+    width: 150px;
+    /* height: 150px; */
+    margin: 0.25rem;
+}
+
+.gallery-upload .galleryupload-items {
+    display: block;
+
+    /* display: flex;
+    grid-template-columns: repeat(auto-fit, 200px);
+    gap: 0.5rem; */
+}
+
+.galleryupload-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.2rem; 
+    line-height: 1em;
+}
+
+.galleryupload-image {
+    width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center;
+}
+
+.galleryupload-image:before {
+    content: '';
+    display: block;
+    width: 100%;
+    padding-top: 100%;
+
+}
+
+.galleryupload-text {
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}

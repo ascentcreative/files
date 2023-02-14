@@ -2,7 +2,12 @@
 
 use AscentCreative\Files\Models\File;
 
+use AscentCreative\Files\Models\Image as Image;
+// use AscentCreative\Images\Models\OutputSpec;
+
 use Illuminate\Http\File as HttpFile;
+
+use AscentCreative\Files\ImageSizer;
 
 
 Route::middleware(['web'])->group(function() {
@@ -183,7 +188,7 @@ Route::middleware(['web'])->group(function() {
 
             // No:
             // - so does it exist in the 'original' folder?
-            if (Storage::disk('images')->exists('/original/'. $filename)) {
+            if (Storage::disk('images')->exists($filename)) {
 
                 ImageSizer::handle($filename, $spec);
 
