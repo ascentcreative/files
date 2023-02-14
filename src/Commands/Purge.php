@@ -36,6 +36,8 @@ class Purge extends Command
 
     /**
      * Execute the console command.
+     * 
+     * TODO: ability (requirement??) to specify disk and path
      *
      * @return int
      */
