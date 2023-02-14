@@ -5,6 +5,10 @@
 
 @section('element')
 
+    {{-- 
+        TODO: This is a weird structure - the outer tag should be the widget, not some hard-coded styling
+        You can tell I got a bit bootstrap-happy here...
+         --}}
     <div class="p-3 bg-light border">
 
     <div class="fileuploadmulti" id="{{nameToId($name)}}"" name="{{ $name }}" 
