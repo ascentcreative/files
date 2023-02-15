@@ -5,6 +5,7 @@ namespace AscentCreative\Files\Commands;
 use Illuminate\Console\Command;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use AscentCreative\Files\Models\File;
 
 
@@ -50,14 +51,22 @@ class PopulateAttributes extends Command
             $files = File::where('mime_type', '')->orWhere('size', 0)->get();
         }
 
+        $count = 0;
         foreach($files as $file) {
 
-            $disk = Storage::disk($file->disk);
-            $file->size = $disk->size($file->hashed_filename);
-            $file->mime_type = $disk->mimeType($file->hashed_filename);
-            $file->save();
+            try {
+                $disk = Storage::disk($file->disk);
+                $file->size = $disk->size($file->hashed_filename);
+                $file->mime_type = $disk->mimeType($file->hashed_filename);
+                $file->save();
+                $count++;
+            } catch (\Exception $e) {
+                $this->error('Error finding information for file : [' . $file->disk . ']  ' . $file->hashed_filename);
+            }
 
         }
+
+        $this->info('Set attributes for ' . $count . ' ' . Str::plural('file', $count));
        
         return 0;
         
