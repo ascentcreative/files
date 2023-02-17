@@ -152,7 +152,7 @@ Route::middleware(['web'])->group(function() {
 
    
 
-    Route::get('/files/serverbrowser/{disk}', [\AscentCreative\Files\Controllers\ServerController::class, 'browse'])->name('files.server')->middleware('auth', 'can:browse-files');
+    // Route::get('/files/serverbrowser/{disk}', [\AscentCreative\Files\Controllers\ServerController::class, 'browse'])->name('files.server')->middleware('auth', 'can:browse-files');
 
 
 
