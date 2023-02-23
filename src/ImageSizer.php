@@ -15,12 +15,13 @@ class ImageSizer {
 
     static function handle($filename, $spec) {
 
-        if (Storage::disk('images')->exists($filename)) {
+        if (Storage::disk('files')->exists($filename)) {
         
         // Yes - create a copy according to the spec
             $manager = new ImageManager(); 
 
-            $path = Storage::disk('images')->path($filename);
+            $path = Storage::disk('files')->path($filename);
+
             $iImage = $manager->make($path);
 
             // apply the spec...
@@ -45,11 +46,14 @@ class ImageSizer {
                     break;
             }
 
+            $info = pathinfo($filename);
+            // dd($info);
+
             // ensure the spec folder exists:
-            Storage::disk('images')->makeDirectory($spec);
+            Storage::disk('files')->makeDirectory($spec . '/' . $info['dirname']);
             
             // save to disk in the spec folder:
-            $iImage->save(Storage::disk('images')->path($spec . '/'. $filename));
+            $iImage->save(Storage::disk('files')->path($spec . '/'. $filename));
 
         } else {
 

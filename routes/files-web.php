@@ -182,13 +182,28 @@ Route::middleware(['web'])->group(function() {
             $filename = $model->hashed_filename; // get the hashed filename from the model
         }
 
+        if(!$model) {
+            // What if the requested file is not an image??
+            // - i.e. we're using this as a conversion for PDFs (etc)
+            $fileModel = File::where('original_filename', $filename)->first();
+            if($fileModel) {
+
+                $converter = config('files.converters.' . $fileModel->mime_type . '.image/jpg');
+                if($converter) {
+                    $filename = $converter::convert($fileModel->hashed_filename, []);
+                } else {
+                    dd("Conversion for " . $fileModel->mime_type . " to image has not been implemented yet");
+                }
+
+            }
+        }
 
         // does this file exist for the requested spec?
-        if (!Storage::disk('images')->exists($spec . '/'. $filename)) {
+        if (!Storage::disk('files')->exists($spec . '/'. $filename)) {
 
             // No:
             // - so does it exist in the 'original' folder?
-            if (Storage::disk('images')->exists($filename)) {
+            if (Storage::disk('files')->exists($filename)) {
 
                 ImageSizer::handle($filename, $spec);
 
@@ -202,7 +217,7 @@ Route::middleware(['web'])->group(function() {
         $cache_exp = new Carbon\Carbon();
         $cache_exp->addWeeks(1);
 
-        return Storage::disk('images')->download($spec . '/'. $filename, null, [
+        return Storage::disk('files')->download($spec . '/'. $filename, null, [
             'Cache-Control' => 'public, max-age=' . (86400 * 7),
             'expires' => $cache_exp->toRfc7231String(),
         ]);

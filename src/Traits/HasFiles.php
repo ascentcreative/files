@@ -143,4 +143,31 @@ trait HasFiles {
     }
 
 
+
+    /**
+     * Attempt to convert a file to an image, and return a route url
+     * 
+     * @param $key = the attacched_to key value
+     * @param $spec = the image size spec to use
+     * @param $idx = the file to use - where we have a multi file field.
+     * 
+     * @return [type]
+     */
+    public function fileAsImage($key, $spec, $idx=0) {
+
+        // first of all, get the file.
+        $file = $this->file($key)->first(); // should use the $idx here.
+
+        // find a converter from the source file to an image format
+
+        // has the file already been converted to an image?
+
+        
+        // once we have a full res source image, pass this to the ImageSizer
+        // to return a url to our chosen spec
+        
+
+    }
+
+
 }
