@@ -2,11 +2,11 @@
 // Single File Uploader
 // ******
 // Code (c) Kieran Metcalfe / Ascent Creative 2023
-
-
 $.ascent = $.ascent?$.ascent:{};
 
 var FileUpload = {
+
+    uploader: null,
         
     options: {
         disk: 'files',
@@ -43,19 +43,12 @@ var FileUpload = {
 
         upl = $(this.element).find('input[type="file"]');
 
-        // console.log($(this.element).data());
-
-        // alert('init uplaoder');
-
-        // if($(this.element).find('.data-item').length > 0) {
-        //     $(this.element).addClass('has-file');
-        // }
-
         if(data = $(this.element).data('value')) {
             this.setValue(data);
         }
 
         $(this.element).find('.fileupload-reset').on('click', function(e) {
+            $(self.element).find('input[type="file"]').val('');
             self.reset();
             e.stopPropagation();
         });
@@ -69,17 +62,17 @@ var FileUpload = {
                 return;
             }
 
-            uploader = new ChunkableUploader({
+            self.uploader = new ChunkableUploader({
                 'disk': self.options.disk,
                 'path': self.options.path,
                 'preserveFilename': self.options.preserveFilename?1:0,
                 'chunkSize': self.options.chunkSize
             });
 
+            
             $(document).on("chunkupload-progress", function(e, data) {
-                
-                if(data.chunkerId == uploader.chunkerId) {
-                    // console.log('progress found', e, data);
+
+                if(data.chunkerId == self.uploader.chunkerId) {
                     self.updateUI('Uploading: ' + data.filename, data.percentComplete);
                     $(self.element).trigger('change');
                 }
@@ -88,7 +81,7 @@ var FileUpload = {
 
             $(document).on("chunkupload-complete", function(e, data) {
 
-                if(data.chunkerId == uploader.chunkerId) {
+                if(data.chunkerId == self.uploader.chunkerId) {
                     // console.log('comlpete found', e, data);
                     self.setValue(data.filemodel);
                     $(self.element).trigger('change');
@@ -99,13 +92,13 @@ var FileUpload = {
 
             $(document).on("chunkupload-error", function(e, data) {
 
-                if(data.chunkerId == uploader.chunkerId) {
+                if(data.chunkerId == self.uploader.chunkerId) {
                     self.setError(data.message);
                 }
 
             });
 
-            uploader.upload(this.files[0]);
+            self.uploader.upload(this.files[0]);
 
             $(self.element).addClass('block-submit');
             $(self.element).data('block-submit-message', "a file is currently uploading");
@@ -163,7 +156,7 @@ var FileUpload = {
     reset: function() {
         
         $(this.element).find('.data-item').remove();
-        
+       
         $(this.element).removeClass('has-file')
         $(this.element).removeClass('error');
         $(this.element).removeClass('block-submit');
