@@ -10,7 +10,7 @@ $.ascent = $.ascent?$.ascent:{};
 var GalleryUpload = {
         
     options: {
-        disk: 'images',
+        disk: 'files',
         path: '',
         preserveFilename: 0,
         placeholder: 'Choose file',
