@@ -129,7 +129,7 @@ Route::middleware(['web'])->group(function() {
      * Route to access the file.
      * NB - the FilePolicy will control access, and will look for the policy for the model the file is attached to.
      */
-    Route::get('/getfile/{file:original_filename}', function(File $file) {
+    Route::get('/getfile/{file:hashed_filename}', function(File $file) {
 
         return $file->download();
 
@@ -142,7 +142,7 @@ Route::middleware(['web'])->group(function() {
      * Route for streaming / ranged bytes:
      * NB - the FilePolicy will control access, and will look for the policy for the model the file is attached to.
      */
-    Route::get('/streamfile/{file:original_filename}', function (File $file) {
+    Route::get('/streamfile/{file:hashed_filename}', function (File $file) {
 
         return $file->stream();
     
