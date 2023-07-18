@@ -1,9 +1,11 @@
-.fileupload.form-control {
+.fileupload.form-control,
+.fileupload .form-control {
    padding: 0px;
    overflow: hidden;
    position: relative;
    isolation: isolate;
 }
+
 
 .fileupload input[type="file"] {
     /* display: none; */
@@ -21,6 +23,10 @@
     /* pointer-events: none; */
 
   
+}
+
+.fileupload-text {
+    pointer-events: none;
 }
 
 .fileupload .fileupload-ui {

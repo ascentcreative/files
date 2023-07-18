@@ -17,14 +17,26 @@ class FileUpload extends FormObjectBase implements FormComponent {
         $this->name = $name;
         $this->label = $label;
 
-        // uses an eloquent relation, with a key, so we need to manually set the value
-        $this->valueFunction = function() use ($name) {
-            if($this->multiple ?? false) {
-                return $this->model->files($name)->get();
-            } else {
-                return $this->model->file($name)->first();
-            }
-        };
+        
+
+        // // uses an eloquent relation, with a key, so we need to manually set the value
+        // $this->valueFunction = function() use ($name) {
+        //     if($this->multiple ?? false) {
+        //         return $this->model->files($name)->get();
+        //     } else {
+        //         if(is_array($this->model)) {
+        //             try {
+        //                 dump($this->model);
+        //                 return $this->model->$name;
+        //             } catch (\Exception $e) {}
+
+                    
+        //             // 
+        //         } else {
+        //             return $this->model->file($name)->first();
+        //         }
+        //     }
+        // };
 
     }
     

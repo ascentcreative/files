@@ -30,6 +30,10 @@ var FileUpload = {
         
         var obj = this.element;
 
+        $(obj).addClass('initialised');
+
+        console.log('Upload INIT');
+
         // console.log(obj);
        
         // alert($(obj).data('disk'));
@@ -43,6 +47,7 @@ var FileUpload = {
 
         upl = $(this.element).find('input[type="file"]');
 
+        console.log('file upload value on init', $(this.element).data('value'));
         if(data = $(this.element).data('value')) {
             this.setValue(data);
         }
@@ -54,6 +59,8 @@ var FileUpload = {
         });
         
         $(upl).on('change', function() {
+
+            console.log('fileupload - change');
 
             self.reset();
 
@@ -75,19 +82,30 @@ var FileUpload = {
                 if(data.chunkerId == self.uploader.chunkerId) {
                     self.updateUI('Uploading: ' + data.filename, data.percentComplete);
                     $(self.element).trigger('change');
+                    
                 }
 
             });
 
             $(document).on("chunkupload-complete", function(e, data) {
 
+                console.log(data);
+
                 if(data.chunkerId == self.uploader.chunkerId) {
                     // console.log('comlpete found', e, data);
                     self.setValue(data.filemodel);
                     $(self.element).trigger('change');
+                    $(self.element).trigger({
+                            type: 'upload-complete',
+                            filedata: data.filemodel,
+                    });
                     // self.updateUI('Uploading: ' + Math.round(data.percentComplete) + "%", data.percentComplete);
                 }
 
+            });
+
+            $(self.element).trigger({
+                type: 'upload-start',
             });
 
             $(document).on("chunkupload-error", function(e, data) {
@@ -106,7 +124,7 @@ var FileUpload = {
            
         });
         
-        $(obj).addClass('initialised');
+  
 
 
         // handlers for server browse popup:
@@ -122,7 +140,27 @@ var FileUpload = {
              * (Tried using one(), but this means the handlers don't get removed if the modal is cancelled)
              */
         //  $(document).on('hidden.bs.modal', '#ajaxModal', self.clearHandlers);
+        // console.log("Reg Mutation Observer");
+        //   // Mutation Observer - if the field names are changed, update the element data-fieldname too
+        //   MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
+        //   var obs_name = new MutationObserver(function(mutations, observer) {
+        //       // fired when a mutation occurs
+        //       // console.log(mutations, observer);
+        //       // ...
+        //       alert('CHANGE! ' + $(self.element).find('input.fileupload-value').attr('name'));
+        //       self.element.data('fieldname', $(self.element).find('input.fileupload-value').attr('name'))
+        //   });
+  
+        //   // define what element should be observed by the observer
+        //   // and what types of mutations trigger the callback
+        //   obs_name.observe($(this.element).find('input.fileupload-value')[0], {
+        //       attributes: true,
+        //       attributeFilter: ['name'],
+        //   });
+  
+
+      
 
     },
 
@@ -141,13 +179,23 @@ var FileUpload = {
         // $(this.element).find('.fileupload-value').val(value);
 
          // create a load of hidden text fields, holding the data items (allows for changes to the model?)
+        let fldname = $(this.element).find('input.fileupload-value').attr('name');
         for(key in data) {
             // console.log(key);
-            $(this.element).append('<input type="hidden" class="data-item" name="' + $(this.element).data('fieldname') + '[' + key + ']" value="' + data[key] + '">');
+            $(this.element).append('<input type="hidden" class="data-item" name="' + fldname + '[' + key + ']" value="' + data[key] + '">');
         }
         
         $(this.element).addClass('has-file');
         $(this.element).removeClass('block-submit');
+
+        // console.log('set value:' , data);
+
+        // let img = $(this.element).find('img.preview');
+        
+        // img.on('load', function() {
+            // $(this).css('opacity', 1);
+        // });
+        // img.css('opacity', 0.5).attr('src', '/image/max/' + data['hashed_filename']);
         
         this.updateUI(data.original_filename, 0);
 
@@ -166,6 +214,11 @@ var FileUpload = {
         // console.log(this.element);
 
         $(this.element).trigger('change');
+    },
+
+    start: function() {
+        // alert('start');
+        $(this.element).find('.fileupload-ui').trigger('click');
     },
 
     updateUI: function(text, pct=0) {
@@ -240,8 +293,7 @@ var observer = new MutationObserver(function(mutations, observer) {
 // and what types of mutations trigger the callback
 observer.observe(document, {
   subtree: true,
-  childList: true
+  childList: true,
+  attributes: false,
   //...
 });
-
-
