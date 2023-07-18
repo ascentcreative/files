@@ -18,25 +18,27 @@ class FileUpload extends FormObjectBase implements FormComponent {
         $this->label = $label;
 
         
+        
+        $this->valueFunction = function() use ($name) {
 
-        // // uses an eloquent relation, with a key, so we need to manually set the value
-        // $this->valueFunction = function() use ($name) {
-        //     if($this->multiple ?? false) {
-        //         return $this->model->files($name)->get();
-        //     } else {
-        //         if(is_array($this->model)) {
-        //             try {
-        //                 dump($this->model);
-        //                 return $this->model->$name;
-        //             } catch (\Exception $e) {}
+            if($this->model instanceof \Illuminate\Database\Eloquent\Model) {
+                 // If it's a model, it uses an eloquent relation, with a key, so we need to manually set the value
+                if($this->multiple ?? false) {
+                    return $this->model->files($name)->get();
+                } else {
+                    return $this->model->file($name)->first();
+                }
 
-                    
-        //             // 
-        //         } else {
-        //             return $this->model->file($name)->first();
-        //         }
-        //     }
-        // };
+            } else {
+
+                // otherwise, do this - which is basically just the default operation
+                // (but the valueFunction can't yet be added dynamically - one TODO...)
+                $prop = dotname($name);
+                return $this->traverseData($this->model, $prop);
+
+            }
+
+        };
 
     }
     
