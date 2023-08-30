@@ -44,6 +44,15 @@ class ImageSizer {
                 case 'crop':
                     $iImage->fit($options['width'], $options['height']);
                     break;
+
+                case 'fit':
+                    $iImage->resize($options['width'], $options['height'], function($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                        })
+                    ->resizeCanvas($options['width'], $options['height'], $options['anchor'] ?? 'center');            
+                   
+                    break;
             }
 
             $info = pathinfo($filename);
