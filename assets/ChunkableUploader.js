@@ -145,7 +145,8 @@ class ChunkableUploader {
                 url: "/chunked-upload",
                 data: formData,
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'X-UPLOAD-TOKEN': uploader.token
                 }
                 
               }).done(function(data, xhr, request){
@@ -166,6 +167,10 @@ class ChunkableUploader {
                 let message = ''
 
                 switch(data.status) {
+                    case 401:
+                        message = 'Unauthorised';
+                     break;
+
                     case 403:
                        message = 'You do not have permission to upload files';
                     break;

@@ -15,6 +15,7 @@
             data-value="{{ json_encode($value) }}"
             data-chunksize="{{ $chunkSize }}"
             data-allowedsize="{{ $allowedSize }}"
+            data-token="{{ $token }}"
         >
 
         <div class="form-control">

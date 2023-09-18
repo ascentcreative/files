@@ -30,6 +30,9 @@ class FilesServiceProvider extends ServiceProvider
 
     Gate::policy(File::class, FilePolicy::class);
 
+
+    app('router')->aliasMiddleware('files-upload-access', \AscentCreative\Files\Middleware\UploadAccess::class);
+
   }
 
   public function boot()

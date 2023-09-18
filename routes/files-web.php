@@ -12,6 +12,9 @@ use AscentCreative\Files\ImageSizer;
 
 Route::middleware(['web'])->group(function() {
 
+    $aryMW = ['files-upload-access']; 
+    // ['auth', 'can:upload-files'] are now combined into the above Middleware;
+
     // TODO - Read encrypted config data to avoid client-side bypassing of allowed max size etc.
     Route::post('/chunked-upload', function() {
 
@@ -82,8 +85,7 @@ Route::middleware(['web'])->group(function() {
 
         return response()->json(request()->all());
 
-    })->middleware('auth', 'can:upload-files');
-
+    })->middleware($aryMW); 
 
 
 
@@ -122,7 +124,7 @@ Route::middleware(['web'])->group(function() {
 
         return response()->json($file);
 
-    })->middleware('auth', 'can:upload-files');
+    })->middleware($aryMW);
 
 
     /**

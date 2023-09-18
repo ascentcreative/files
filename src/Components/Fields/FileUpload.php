@@ -3,6 +3,8 @@
 namespace AscentCreative\Files\Components\Fields;
 
 use Illuminate\View\Component;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 class FileUpload extends Component
 {
@@ -25,6 +27,8 @@ class FileUpload extends Component
 
     public $chunkSize; // the max size of a file chunk, governed by the server
     public $allowedSize; // the upper limit of files we'll allow!
+
+    public $token;
 
     /**
      * Create a new component instance.
@@ -70,6 +74,15 @@ class FileUpload extends Component
             // TODO - use a value from a config file
             // Or, maybe we encode/encrypt a copy of the config, and the server cross checks that.... <- Yes. Do this.
         }
+
+        // create a token in the session and pass to the UI.
+        $key = uniqid();
+        $value = Str::uuid()->toString();
+    
+        session()->push('upload_tokens.' . $key, $value);
+
+        // session()->push('upload_tokens.abc', '123');
+        $this->token = Crypt::encryptString($key . ':' . $value);
 
     }
 

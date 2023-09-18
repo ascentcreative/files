@@ -14,7 +14,8 @@ var FileUpload = {
         preserveFilename: false,
         placeholder: 'Choose file',
         chunkSize: null,
-        allowedSize: 0
+        allowedSize: 0,
+        token: null
     },
     
     _init: function () {
@@ -43,6 +44,7 @@ var FileUpload = {
         this.options.preserveFilename = $(obj).data('preservefilename');
         this.options.chunkSize = $(obj).data('chunksize');
         this.options.allowedSize = $(obj).data('allowedsize');
+        this.options.token = $(obj).data('token');
         // console.log($(obj).data());
 
         upl = $(this.element).find('input[type="file"]');
@@ -73,11 +75,14 @@ var FileUpload = {
                 'disk': self.options.disk,
                 'path': self.options.path,
                 'preserveFilename': self.options.preserveFilename?1:0,
-                'chunkSize': self.options.chunkSize
+                'chunkSize': self.options.chunkSize,
+                'token': self.options.token,
             });
 
             
             $(document).on("chunkupload-progress", function(e, data) {
+
+                $(self.element).addClass('file-uploading');
 
                 if(data.chunkerId == self.uploader.chunkerId) {
                     self.updateUI('Uploading: ' + data.filename, data.percentComplete);
@@ -90,6 +95,7 @@ var FileUpload = {
             $(document).on("chunkupload-complete", function(e, data) {
 
                 console.log(data);
+                $(self.element).removeClass('file-uploading');
 
                 if(data.chunkerId == self.uploader.chunkerId) {
                     // console.log('comlpete found', e, data);
@@ -110,6 +116,7 @@ var FileUpload = {
 
             $(document).on("chunkupload-error", function(e, data) {
 
+                $(self.element).removeClass('file-uploading');
                 if(data.chunkerId == self.uploader.chunkerId) {
                     self.setError(data.message);
                 }
