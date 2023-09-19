@@ -83,7 +83,6 @@ var FileUploadMulti = {
     },
 
     clear: function() {
-        alert('clear!');
         $(this.element).find('.fileuploadmulti-ui').remove();
         this.checkFiles();
     },
