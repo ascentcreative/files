@@ -48,10 +48,8 @@ var FileUploadMulti = {
     
         upl = $(this.element).find('input[type="file"]');
 
-        if($(this.element).find('.fileupload-value').val() != '') {
-            $(this.element).addClass('has-file');
-        }
-
+        // console.log($(this.element).find('.fileupload-value').val());
+        this.checkFiles();
        
          upl.on('change', function() {
 
@@ -77,14 +75,22 @@ var FileUploadMulti = {
         
 
          $(this.element).on('change', function() {
-            // console.log('change handler');
+            self.checkFiles();
             self.updateFileIndexes();
          });
         
 
     },
 
- 
+
+    checkFiles: function(data) {
+        let len = $(this.element).find('.fileuploadmulti-ui').length;
+        if(len > 0) {
+            $(this.element).addClass('has-file');
+        } else {
+            $(this.element).removeClass('has-file');
+        }
+    },
 
 
     createFileBlock: function(data) {
@@ -118,9 +124,9 @@ var FileUploadMulti = {
         $(this.element).find('.fileuploadmulti-ui').each(function(index) {
             var prefix = fldname + "[" + index + "]";
             // console.log('prefix: ' + prefix);
-            console.log($(this).find("input"));
+            // console.log($(this).find("input"));
             $(this).find("input").each(function() {
-                console.log(this.name);
+                // console.log(this.name);
                 esc = fldname.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 re = new RegExp(esc + "\\[\\d+\\]");
                this.name = this.name.replace(re, prefix);   
