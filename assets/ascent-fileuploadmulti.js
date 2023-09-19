@@ -82,6 +82,12 @@ var FileUploadMulti = {
 
     },
 
+    clear: function() {
+        alert('clear!');
+        $(this.element).find('.fileuploadmulti-ui').remove();
+        this.checkFiles();
+    },
+
 
     checkFiles: function(data) {
         let len = $(this.element).find('.fileuploadmulti-ui').length;
