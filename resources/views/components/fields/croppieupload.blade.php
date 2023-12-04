@@ -14,12 +14,15 @@
         data-value="{{ json_encode($value) }}"
         >
 
-        <label style="">
-            Click to set image
-            <input type="file" class="croppie-file" />
-        </label>
+       
 
         <img src="" class="img-preview" />
+
+        <div class="placeholder">Click to upload image</div>
+
+        <label style="">
+            <input type="file" class="croppie-file" />
+        </label>
       
 
         <x-cms-modal modalid="modal-{{ $unid }}" centered="true" :showFooter="false" :showHeader="false">
