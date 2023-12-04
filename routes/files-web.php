@@ -55,6 +55,7 @@ Route::middleware(['web'])->group(function() {
             
             $payload = request()->file('payload');
 
+            // dump(request()->all());
             // dd($payload);
             $sanitise = $payload->getClientOriginalName();
             $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
@@ -62,7 +63,7 @@ Route::middleware(['web'])->group(function() {
             // // Store image on disk.
             $dest = $path;
             if(request()->preserveFilename) {
-                $dest .= $santise;
+                $dest .= $sanitise;
             } else {
                 $tempfile = new HttpFile($chunkpath);
                 $dest .= $tempfile->hashName();
