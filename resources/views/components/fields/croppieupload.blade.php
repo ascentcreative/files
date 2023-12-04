@@ -56,7 +56,7 @@
 
 @once
     @push('scripts')
-        @script('/vendor/ascent/files/ascent-croppieupload.js');
+        @script('/vendor/ascent/files/ascent-croppieupload.js')
     @endpush
     @push('styles')
         {{-- @style('/vendor/ascent/cms/form/components/croppie/croppie.css') --}}
