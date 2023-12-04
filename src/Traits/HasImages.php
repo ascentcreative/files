@@ -35,37 +35,67 @@ trait HasImages {
      */
     public function saveImage($field, $data) {
 
-        /** Sync the image models: */
-        /** NB - this should use the $field as a key so we're only dealing with a specific subset of the image records. */
+        if($data) {
 
-        // get the ids of the existing rows:
+            $stored = $this->image($field)->first();
+
+            if ($stored && $stored->id != ($data['id'] ?? '')) {
+                $stored->delete();
+                // dd('dleeted')
+            } 
+        
+            $file = $this->image($field)->updateOrCreate(
+                [
+                    'id'=>$data['id'] ??  null,
+                    'attachedto_key'=>$field
+                ],
+                $data
+            );
+
+
+        } else {
+
+            // null incoming info - must delete any existing record
+            $file = $this->image($field)->first();
+            if($file) {
+                $file->delete();
+            }
+            
+        }
+
+        // // dd('saving');
+
+        // /** Sync the image models: */
+        // /** NB - this should use the $field as a key so we're only dealing with a specific subset of the image records. */
+
+        // // get the ids of the existing rows:
         // $stored = $this->image($field)->get()->collect()->transform(function($item) { return $item->id; })->toArray();
 
-        // // store / update the incoming data
+        // // // store / update the incoming data
         // $incoming = array();
 
         // if(isset($data)) {
-        //     foreach($data as $idx=>$row) {
+        //     // foreach($data as $idx=>$row) {
 
-        //         $row['imageable_key'] = $field;
-        //         $row['imageable_sort'] = $idx;
+        //         $data['imageable_key'] = $field;
+        //         $data['imageable_sort'] = 0;
 
     
-        //         $img = $this->images()->updateOrCreate(
+        //         $img = $this->files()->updateOrCreate(
         //             [
-        //                 'id'=>$row['id'],
+        //                 'id'=>$data['id'],
         //             ],
-        //             $row
+        //             $data
         //         );
 
         //         // log the updated / saved IDs
         //         $incoming[] = $img->id;
-        //     } 
+        //     // } 
         // }
 
        
 
-        // // do an array_diff to find the IDs to delete (i.e. they weren't in the incoming data)
+        // // // do an array_diff to find the IDs to delete (i.e. they weren't in the incoming data)
         // $del = array_diff($stored, $incoming);
 
         // if (count($del) > 0) {
@@ -74,7 +104,7 @@ trait HasImages {
         // }
 
         // dd($data);
-        // $this->users()->sync($data);
+        // $this->images()->sync($data);
  
     }
 
