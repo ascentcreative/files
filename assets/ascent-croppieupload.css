@@ -10,7 +10,7 @@
 }
 
 .croppie-upload .modal-dialog {
-    max-width: 400px !important;
+    /* max-width: 400px !important; */
 }
 
 .croppie-upload IMG.img-preview, .croppie-upload LABEL,
