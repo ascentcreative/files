@@ -20,6 +20,7 @@
         data-preservefilename="{{ $preserveFilename ? 'true':'false' }}"
         data-chunksize="{{ $chunkSize }}"
         data-allowedsize="{{ $allowedSize }}"
+        data-token="{{ $token }}"
         >
         <input type="file" multiple class="fileupload-file" accept="{{ join(',', $accept) }}" id="{{nameToId($name)}}-upload">        
         <input type="hidden" value="" name="{{ $name }}" />
