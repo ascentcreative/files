@@ -84,13 +84,16 @@ Route::middleware(['web'])->group(function() {
 
         }
 
+        // not final chunk, return the request info so 
+        // the JS knows to send the next chunk.
         return response()->json(request()->all());
 
     })->middleware($aryMW); 
 
 
 
-    
+    // Old endpoint - used for single shot uploads.
+    // Better to use the chunked option above
     Route::post('/file-upload', function() {
 
         $params = request()->all();
@@ -168,8 +171,11 @@ Route::middleware(['web'])->group(function() {
      *  - Creates rendered images on the fly, but only if not already created
      *  - Allows browser to cache images as it would with files served directly
      */
+    // Route::get('/image/{spec}/{image:hashed_filename}', function($spec, Image $image) { //$filename) {
     Route::get('/image/{spec}/{filename}', function($spec, $filename) {
 
+
+        // dd('exit');
         // get the image by the filename requested
         // - filename could be the hashed or original. 
         // - if hashed, just stream that file.
@@ -180,15 +186,20 @@ Route::middleware(['web'])->group(function() {
         // As such, for previews etc we can allow access using the hashed filename,
         // bypassing the model (which is essentially just a lookup to get the hashed filename anyway)
         
-        $model = Image::where('original_filename', $filename)->first();
+        $model = Image::where('hashed_filename', $filename)->first();
+        if(!$model) {
+            // emergency check by original filename
+            Image::where('original_filename', $filename)->first();
+        }
         if($model) {
             $filename = $model->hashed_filename; // get the hashed filename from the model
         }
-
+        
         if(!$model) {
+
             // What if the requested file is not an image??
             // - i.e. we're using this as a conversion for PDFs (etc)
-            $fileModel = File::where('original_filename', $filename)->first();
+            $fileModel = File::where('hashed_filename', $filename)->first();
             if($fileModel) {
 
                 $converter = config('files.converters.' . $fileModel->mime_type . '.image/jpg');
