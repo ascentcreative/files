@@ -192,6 +192,7 @@ var CroppieUpload = {
                         // console.log('comlpete found', e, data);
                         $('.modal').modal('hide');
                         self.setValue(data.filemodel);
+                        $(self.element).trigger("croppie-upload-complete");
                         // $(self.element).trigger('change');
                         // $(self.element).trigger({
                         //         type: 'upload-complete',
