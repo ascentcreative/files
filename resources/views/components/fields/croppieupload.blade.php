@@ -21,7 +21,7 @@
         <div class="placeholder">Click to upload image</div>
 
         <label style="">
-            <input type="file" class="croppie-file" />
+            <input type="file" class="croppie-file" accept="image/*"/>
         </label>
       
 
