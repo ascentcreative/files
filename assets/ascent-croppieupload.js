@@ -89,7 +89,7 @@ var CroppieUpload = {
                 
                 img = new Image;
                 img.onload = function() {
-                    self.startCroppie(e.target.result, img.width, img.height, input.files[0].type);
+                    self.startCroppie(e.target.result, img.width, img.height, input.files[0]);
                 };
                 img.src = e.target.result;
                                 
@@ -106,7 +106,7 @@ var CroppieUpload = {
     },
 
 
-    startCroppie: function(url, filewidth, fileheigth, filetype) {
+    startCroppie: function(url, filewidth, fileheight, file) {
 
         let self = this;
 
@@ -169,11 +169,11 @@ var CroppieUpload = {
                 quality: 1, //self.options.quality
                 
             }).then(function (resp) {
-                // console.log(resp);
+                // console.log(file.name);
                 // console.log(self);
                 // alert(self.options.token);
 
-                resp.name="mugshot.jpg";
+                resp.name=file.name;
 
                 self.uploader = new ChunkableUploader({
                     'disk': 'files', //self.options.disk,
