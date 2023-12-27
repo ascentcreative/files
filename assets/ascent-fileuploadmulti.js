@@ -8,6 +8,8 @@
 $.ascent = $.ascent?$.ascent:{};
 
 var FileUploadMulti = {
+
+    uploader: null,
         
     options: {
         disk: 'files',
@@ -48,17 +50,24 @@ var FileUploadMulti = {
             this.updateFileIndexes();
         }
     
-        upl = $(this.element).find('input[type="file"]');
+
+        let uploader = $(this.element).find('input[type="file"]');
+
+        // console.log(upl);
 
         // console.log($(this.element).find('.fileupload-value').val());
         this.checkFiles();
        
-         upl.on('change', function() {
+        uploader.on('change', function() {
 
+
+            // alert('oikj');
+            // console.log(self.element);
             // for each file selected, create a new uploader bar and show progress as it uploads.
 
             for(var iFile = 0; iFile < this.files.length; iFile++ ) {
 
+                $(self.element).css('border', '3px solid red !important');
                 var item = self.createFileBlock();
                 $(item).fileuploadmultifile('upload', this.files[iFile]);
 
@@ -80,6 +89,8 @@ var FileUploadMulti = {
             self.checkFiles();
             self.updateFileIndexes();
          });
+
+         $(this.element).addClass('initialised');
         
 
     },
@@ -101,9 +112,10 @@ var FileUploadMulti = {
 
 
     createFileBlock: function(data) {
-        
+    
         template = $('template#fileuploadmulti-item');
-        item = $(template.html());
+    
+        let item = $(template.html());
         $(this.element).append(item);
         $(item).fileuploadmultifile({
             disk: this.options.disk,
@@ -142,10 +154,7 @@ var FileUploadMulti = {
         });
 
     }
-
-
-
-   
+  
 
 }
 
@@ -304,104 +313,6 @@ var FileUploadMultiFile = {
     }
 
 
-    // oldupload: function(file) {
-
-    //     var self = this;
-
-      
-    //     var formData = new FormData(); 
-    //     formData.append('payload', file); 
-    //     formData.append('disk', self.options.disk);
-    //     formData.append('path', self.options.path);
-    //     formData.append('preserveFilename', self.options.preserveFilename);
-       
-
-    //     $.ajax({
-    //         xhr: function()
-    //         {
-                
-    //         var xhr = new window.XMLHttpRequest();
-                
-    //             //self.setUploadState();
-    //             //Upload progress
-    //             xhr.upload.addEventListener("progress", function(evt){
-                
-    //                 if (evt.lengthComputable) {
-    //                 var percentComplete = (evt.loaded / evt.total) * 100;
-    //                 //Do something with upload progress
-    //                 //prog.find('PROGRESS').attr('value', percentComplete);
-    //                 self.updateUI('Uploading: ' + Math.round(percentComplete) + "%", percentComplete);
-    //                 console.log(percentComplete);
-
-    //                 }
-    //             }, false);
-    //             return xhr;
-    //         },
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         type: 'POST',
-    //         url: "/file-upload",
-    //         data: formData,
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         }
-
-    //     }).done(function(data, xhr, request){
-
-                
-    //             //Do something success-ish
-    //             //$(obj).parents('FORM').unbind('submit', blocksubmit);
-    //             //console.log(data);
-    //             // $('INPUT[type=submit]').prop('disabled', false).val($('INPUT[type="submit"]').data('oldval')).css('opacity', 1);
-    //             // prog.remove();
-    //             // upl.remove();
-
-    //         // self.updateUI(data.original_name + ' : Upload Complete', 0, 'value');
-    //             //$(self.element).find('.fileupload-value').val(data.id);
-    //             self.setValue(data); //data.id, data.original_name);
-
-    //             console.log(data);
-
-    //             $(self.element).trigger('change');
-
-
-    //             //   var result = $.parseJSON(data);
-    //             //   //console.log(result);
-    //             //   if(result['result'] == 'OK') {
-    //             //       obj.find('#' + self.fldName + '-filename').val(result['file']);
-    //             //       self.setCompleteState();
-    //             //   } else {
-                    
-    //             //   }
-
-            
-    //     }).fail(function (data) {
-
-    //         switch(data.status) {
-    //             case 403:
-    //                 self.setError('You do not have permission to upload files');
-
-    //             //   self.updateUI('You do not have permission to upload files', 0, 'error');
-
-    //                 break;
-
-    //             case 413:
-    //                 self.setError('The file is too large for the server to accept');
-    //                 //self.updateUI('The file is too large for the server to accept', 0, 'error');
-    //                 break;
-
-    //             default:
-    //                 self.setError('An unexpected error occurred');
-    //                 //self.updateUI('An unexpected error occurred', 0, 'error');
-    //                 break;
-    //         }
-
-    //     });
-
-
-    // }
-
 }
 
 
@@ -410,3 +321,28 @@ $.extend($.ascent.FileUploadMultiFile, {
 		 
 		
 }); 
+
+
+$(document).ready(function() {
+    $('.fileuploadmulti').not('.initialised').fileuploadmulti();
+});
+
+
+
+MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+var observer = new MutationObserver(function(mutations, observer) {
+    // fired when a mutation occurs
+    // console.log(mutations, observer);
+    // ...
+    $('.fileuploadmulti').not('.initialised').fileuploadmulti();
+});
+
+// define what element should be observed by the observer
+// and what types of mutations trigger the callback
+observer.observe(document, {
+  subtree: true,
+  childList: true
+  //...
+});
+

@@ -22,11 +22,11 @@
         data-allowedsize="{{ $allowedSize }}"
         data-token="{{ $token }}"
         >
-        <input type="file" multiple class="fileupload-file" accept="{{ join(',', $accept) }}" id="{{nameToId($name)}}-upload">        
+        <input type="file" multiple class="fileupload-file" accept="{{ join(',', $accept) }}" id="{{nameToId($name)}}-upload-{{ $unid = uniqid() }}">        
         <input type="hidden" value="" name="{{ $name }}" />
     </div>
 
-    <label class="button btn btn-primary btn-sm bi-plus-circle-fill mb-0" for="{{ nameToId($name) }}-upload">
+    <label class="button btn btn-primary btn-sm bi-plus-circle-fill mb-0" for="{{ nameToId($name) }}-upload-{{ $unid }}">
         Add Files
     </label>
     </div>
@@ -53,7 +53,7 @@
 
 @overwrite
 
-
+{{-- 
 @push('scripts')
     <script>
         $(document).ready(function() {
@@ -63,4 +63,4 @@
             });
         });
     </script>
-@endpush
+@endpush --}}
