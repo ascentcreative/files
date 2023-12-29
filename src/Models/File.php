@@ -87,4 +87,25 @@ class File extends Model
 
     }
 
+
+    public function getMediaTypeAttribute() {
+
+        $split = explode('/', $this->mime_type);
+        $stub = $split[0];
+
+        switch ($stub) {
+
+            case 'audio':
+            case 'image':
+                return $stub;
+                break;
+
+            default:
+                return 'other';
+                break;
+
+        }
+
+    }
+
 }
