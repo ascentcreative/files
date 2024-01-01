@@ -172,7 +172,7 @@ Route::middleware(['web'])->group(function() {
      *  - Allows browser to cache images as it would with files served directly
      */
     // Route::get('/image/{spec}/{image:hashed_filename}', function($spec, Image $image) { //$filename) {
-    Route::get('/image/{spec}/{filename}', function($spec, $filename) {
+    Route::get('/image/{spec}/{filename}/{idx?}', function($spec, $filename, $idx=0) {
 
 
         // dd('exit');
@@ -212,8 +212,15 @@ Route::middleware(['web'])->group(function() {
             }
         }
 
+        // dump($idx);
+        // dd($filename);
+
+        if(is_array($filename)) {
+            $filename = $filename[$idx];
+        }
+
         // does this file exist for the requested spec?
-        if (!Storage::disk('files')->exists($spec . '/'. $filename)) {
+        if (!Storage::disk('files')->exists($spec . '/'. $filename[0])) {
 
             // No:
             // - so does it exist in the 'original' folder?

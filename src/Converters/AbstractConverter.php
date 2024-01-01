@@ -28,7 +28,7 @@ abstract class AbstractConverter {
         }
         
         // dd($files);
-        return $files[0];
+        return $files; //[0];
 
     }
 
