@@ -2,12 +2,18 @@
 
 namespace AscentCreative\Files\Components;
 
+use Imagick;
+use ImagickPixel;
+
+
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Component;
 
 class Previewer extends Component
 {
 
    public $file;
+   public $pageCount = 1;
 
     /**
      * Create a new component instance.
@@ -18,6 +24,13 @@ class Previewer extends Component
     {
         
         $this->file = $file;
+
+        $disk = Storage::disk('files');
+
+        $ping = new Imagick();
+        $ping->pingImage($disk->path($file->hashed_filename));
+        $this->pageCount = $ping->getNumberImages();
+
 
     }
 

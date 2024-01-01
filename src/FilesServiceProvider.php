@@ -64,6 +64,8 @@ class FilesServiceProvider extends ServiceProvider
     packageAssets()->addStylesheet('/vendor/ascent/files/ascent-fileuploadmulti.css');
     packageAssets()->addScript('/vendor/ascent/files/ascent-fileuploadmulti.js');
 
+    packageAssets()->addStylesheet('/vendor/ascent/files/ascent-previewer.css');
+
     $this->bootComponents();
 
     $this->bootPublishes();
