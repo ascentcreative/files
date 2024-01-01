@@ -48,6 +48,9 @@ class PdfToJpg extends AbstractConverter {
             $im->setResolution(300,300);
             $im->readimage($disk->path($filename) . '[' . $page . ']'); 
             $im->setImageFormat('jpeg');    
+            $im->setImageBackgroundColor('#ffffff');
+            $im = $im->flattenImages();
+            
             $im->writeImage($disk->path($outfile)); 
             $im->clear(); 
             $im->destroy();
