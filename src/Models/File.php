@@ -97,9 +97,10 @@ class File extends Model
 
             case 'audio':
             case 'image':
+            case 'video':
                 return $stub;
                 break;
-
+                
             default:
                 return 'other';
                 break;
