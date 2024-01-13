@@ -108,3 +108,18 @@
 .fileupload.has-file .fileupload-reset {
     display: inline-block;
 }
+
+
+
+audio.read-only-file-component { 
+    /* display: block; */
+    height: 40px !important;
+    margin-top: -10px;
+    margin-left: -20px;
+    margin-bottom: -10px;
+    background: transparent;
+}
+
+audio.read-only-file-component::-webkit-media-controls-enclosure {
+    background: transparent;
+}
