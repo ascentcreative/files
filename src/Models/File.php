@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+use AscentCreative\Files\Events\FileEvent;
+
 class File extends Model
 {
     use HasFactory;
@@ -19,6 +21,12 @@ class File extends Model
 
 
     protected static function booted() {
+
+        static::created(function($model) {
+            FileEvent::dispatch($model, FileEvent::FILE_CREATED);
+        });
+
+
         // delete on-disk file
         static::deleted(function ($model) {
             // ** TODO: Need a check that no other file records point to the same on-disk file
@@ -107,6 +115,10 @@ class File extends Model
 
         }
 
+    }
+
+    public function getStoragePath() {
+        return Storage::disk($this->disk)->path($this->hashed_filename);
     }
 
 }
