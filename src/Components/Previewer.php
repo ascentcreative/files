@@ -13,7 +13,7 @@ class Previewer extends Component
 {
 
    public $file;
-   public $pageCount = 1;
+   public $pageCount = 0;
 
     /**
      * Create a new component instance.
@@ -27,9 +27,14 @@ class Previewer extends Component
 
         $disk = Storage::disk('files');
 
-        $ping = new Imagick();
-        $ping->pingImage($disk->path($file->hashed_filename));
-        $this->pageCount = $ping->getNumberImages();
+        try {
+            $ping = new Imagick();
+            $ping->pingImage($disk->path($file->hashed_filename));
+            $this->pageCount = $ping->getNumberImages();
+        } catch (\ImagickException $ie) {
+            // echo $ie->getMessage();
+            $this->pageCount = -99;
+        }
 
 
     }
