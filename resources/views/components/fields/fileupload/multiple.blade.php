@@ -39,7 +39,7 @@
         <div class="fileuploadmulti-ui fileupload-ui form-control">
             <div class="fileupload-display">
                 
-                <A href="#" onclick="return false;" class="fileupload-reset bi-x-square-fill text-lg text-danger" style="font-size: 1.2rem; padding-right: 20px;"></A>
+                <A href="#" onclick="return false;" class="fileupload-reset button btn btn-primary bi-trash-fill xbi-x-square-fill xtext-lg xtext-danger"></A>
                 <div class="fileupload-progress"></div>
                 <div class="fileupload-text"></div>
 

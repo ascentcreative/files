@@ -37,7 +37,7 @@
         
                     <div class="fileupload-display">
                         
-                        <A href="#" onclick="return false;" class="fileupload-reset bi-x-square-fill text-lg text-danger" style="font-size: 1.2rem; padding-right: 20px;"></A>
+                        <A href="#" onclick="return false;" class="fileupload-reset bi-trash-fill button btn btn-primary xbi-x-square-fill text-lg xtext-primary"></A>
                         
                         <div class="fileupload-progress"></div>
                         <div class="fileupload-text">

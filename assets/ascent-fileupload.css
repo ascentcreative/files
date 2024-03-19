@@ -106,7 +106,15 @@
 }
 
 .fileupload.has-file .fileupload-reset {
-    display: inline-block;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem; 
+    margin-right: 10px;
+
+    width: 1.4rem;
+    height: 1.4rem;
+    padding: 0.25rem;
 }
 
 
