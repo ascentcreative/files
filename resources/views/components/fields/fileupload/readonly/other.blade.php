@@ -1,1 +1,1 @@
-<a href="{{ route('file.stream', ['file'=>$value]) }}" target="_blank"><i class="bi-arrow-down-circle-fill"> </i> {{ $value->original_filename }}</a>
+<a href="{{ route('file.url', ['file'=>$value]) }}" target="_blank"><i class="bi-arrow-down-circle-fill"> </i> {{ $value->original_filename }}</a>
