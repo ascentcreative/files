@@ -115,7 +115,7 @@ var GalleryUpload = {
             $(item).galleryuploaditem('setValue', data); //.id , data.original_filename);
         }
 
-        // this.updateFileIndexes();
+        this.updateFileIndexes();
 
         return item;
 
