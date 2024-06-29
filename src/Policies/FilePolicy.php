@@ -7,15 +7,17 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
+use Illuminate\Support\Facades\Gate;
+
 class FilePolicy
 {
     use HandlesAuthorization;
 
-    public function download(User $user, File $file) {
+    public function download(User $user = null, File $file) {
        
         if($parent = $file->attachedto) {
             // fire off a policy check to the model the file is attached to.
-            return(request()->user()->can('downloadFile', [$parent, $file]));
+            Gate::authorize('downloadFile', [$parent, $file]);
         }
 
         return Response::allow();
