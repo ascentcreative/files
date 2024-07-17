@@ -69,7 +69,7 @@ class RefreshImages extends Command
                 foreach($specs as $spec) {
                     echo "\nProcessing: " . $img->original_filename . " (" . $spec . ")";
                     try {
-                        ImageSizer::handle($img->original_filename, $spec);
+                        ImageSizer::handle($img->original_filename, $spec, true);
                     } catch (\Exception $e) {
                         $this->error("\nERROR: " . $e->getMessage());
                         return 0;

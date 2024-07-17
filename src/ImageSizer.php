@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Storage;
  */
 class ImageSizer {
 
-    static function handle($filename, $spec) {
+    static function handle($filename, $spec, $force=false) {
 
         if (Storage::disk('files')->exists($filename)
             &&
-            !Storage::disk('files')->exists($spec . '/'. $filename)
+            ($force || !Storage::disk('files')->exists($spec . '/'. $filename))
             ) {
         
         // Yes - create a copy according to the spec
