@@ -20,7 +20,7 @@ class ImageSizer {
             ($force || !Storage::disk('files')->exists($spec . '/'. $filename))
             ) {
         
-                echo 'here';
+            
         // Yes - create a copy according to the spec
             $manager = new ImageManager(); 
 
