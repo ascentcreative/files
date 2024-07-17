@@ -15,7 +15,10 @@ class ImageSizer {
 
     static function handle($filename, $spec) {
 
-        if (Storage::disk('files')->exists($filename)) {
+        if (Storage::disk('files')->exists($filename)
+            &&
+            !Storage::disk('files')->exists($spec . '/'. $filename)
+            ) {
         
         // Yes - create a copy according to the spec
             $manager = new ImageManager(); 
@@ -62,7 +65,7 @@ class ImageSizer {
             Storage::disk('files')->makeDirectory($spec . '/' . $info['dirname']);
             
             // save to disk in the spec folder:
-            $iImage->save(Storage::disk('files')->path($spec . '/'. $filename));
+            $iImage->save(Storage::disk('files')->path($spec . '/'. $filename), $options['quality'] ?? null);
 
         } else {
 
