@@ -22,6 +22,7 @@ class FileUpload extends Component
 
     public $accept;
 
+    public $maxFiles;
     public $multiple;
     public $sortable;
 
@@ -35,7 +36,9 @@ class FileUpload extends Component
      *
      * @return void
      */
-    public function __construct($label, $name, $value=null, $disk='files', $path='', $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', $accept=[], $multiple=false, $sortable=false, $allowedSize='', $chunkSize='')
+    public function __construct($label, $name, $value=null, $disk='files', $path='', 
+                                    $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', 
+                                    $accept=[], $multiple=false, $maxFiles=0, $sortable=false, $allowedSize='', $chunkSize='')
     {
         
         $this->label = $label;
@@ -49,6 +52,10 @@ class FileUpload extends Component
         $this->wrapper = $wrapper;
         $this->class = $class;
 
+        $this->maxFiles = $maxFiles;
+        if($multiple === false && $maxFiles > 1) {
+            $multiple = true;
+        }
         $this->multiple = $multiple;
         $this->sortable = $sortable;
 

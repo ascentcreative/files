@@ -24,13 +24,17 @@ class GalleryUpload extends Component
 
     public $sortable;
 
+    public $maxFiles;
+
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($label, $name, $value, $spec=null, $disk='images', $path='', $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', $accept=[], $sortable=true)
+    public function __construct($label, $name, $value, $spec=null, $disk='images', $path='', 
+                                    $maxFiles = 0,
+                                    $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', $accept=[], $sortable=true)
     {
         
         $this->label = $label;
@@ -47,6 +51,7 @@ class GalleryUpload extends Component
         $this->class = $class;
 
         $this->sortable = $sortable;
+        $this->maxFiles = $maxFiles;
 
     }
 

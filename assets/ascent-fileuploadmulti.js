@@ -19,7 +19,8 @@ var FileUploadMulti = {
         sortable: false,
         chunkSize: null,
         allowedSize: 0,
-        token: null
+        token: null,
+        maxFiles: 0
     },
     
     _init: function () {
@@ -42,6 +43,7 @@ var FileUploadMulti = {
         this.options.chunkSize = $(obj).data('chunksize');
         this.options.allowedSize = $(obj).data('allowedsize');
         this.options.token = $(obj).data('token');
+        this.options.maxFiles = $(obj).data('maxfiles');
 
         if(this.options.data) {
             for(file in this.options.data) {
@@ -51,6 +53,24 @@ var FileUploadMulti = {
         }
     
 
+    
+        // check against specified max files:
+        $(this.element).parents('.fileupload-outer').on('click', "label.button", function() {
+           
+            let max = self.options.maxFiles;
+    
+            if(max != 0) {
+                let count = $(self.element).find('.fileuploadmulti-ui').length;
+
+                if(count >= max) {
+                    alert("You may only add " + max + " file" + (max > 1 ? "s" : ""));
+                    return false;
+                }
+            }
+
+
+        });
+
         let uploader = $(this.element).find('input[type="file"]');
 
         // console.log(upl);
@@ -59,6 +79,14 @@ var FileUploadMulti = {
         this.checkFiles();
        
         uploader.on('change', function() {
+
+            // check we've not spammed a massive selection
+            let max = self.options.maxFiles;
+            let count = $(self.element).find('.fileuploadmulti-ui').length + this.files.length;
+            if(max != 0 && count > max) {
+                alert("You may only add " + max + " file" + (max > 1 ? "s" : ""));
+                return false;
+            }
 
 
             // alert('oikj');

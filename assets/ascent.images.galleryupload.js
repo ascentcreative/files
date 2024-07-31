@@ -14,7 +14,8 @@ var GalleryUpload = {
         path: '',
         preserveFilename: 0,
         placeholder: 'Choose file',
-        sortable: true
+        sortable: true,
+        maxFiles: 0
     },
     
     _init: function () {
@@ -32,6 +33,7 @@ var GalleryUpload = {
         
         var obj = this.element;
         
+        this.options.maxFiles = $(this.element).data('maxfiles');
 
         // console.log(obj.data('value'));
 
@@ -49,10 +51,31 @@ var GalleryUpload = {
             $(this.element).addClass('has-file');
         }
 
+
+        $(this.element).on('click', 'label.button', function() {
+            let max = self.options.maxFiles;
+            if(max != 0) {
+                let count = $(self.element).find('.galleryupload-ui').length;
+
+                if(count >= max) {
+                    alert("You may only add " + max + " image" + (max > 1 ? "s" : ""));
+                    return false;
+                }
+            }
+        });
+
        
         upl.on('change', function() {
 
             // for each file selected, create a new uploader bar and show progress as it uploads.
+
+            // check we've not just spammed with a massive selection:
+            let max = self.options.maxFiles;
+            let count = $(self.element).find('.galleryupload-ui').length + this.files.length;
+            if(max != 0 && count > max) {
+                alert("You may only add " + max + " image" + (max > 1 ? "s" : ""));
+                return false;
+            }
 
             for(var iFile = 0; iFile < this.files.length; iFile++ ) {
 

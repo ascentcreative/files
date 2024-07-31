@@ -21,6 +21,7 @@
         data-chunksize="{{ $chunkSize }}"
         data-allowedsize="{{ $allowedSize }}"
         data-token="{{ $token }}"
+        data-maxfiles="{{ $maxFiles }}"
         >
         <input type="file" multiple class="fileupload-file" accept="{{ join(',', $accept) }}" id="{{nameToId($name)}}-upload-{{ $unid = uniqid() }}">        
         <input type="hidden" value="" name="{{ $name }}" />

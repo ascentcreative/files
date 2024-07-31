@@ -7,7 +7,10 @@
 
     {{-- @dump(json_encode($value)) --}}
 
-    <div class="p-3 bg-light border gallery-upload" id="{{nameToId($name)}}" name="{{ $name }}" data-value="{{ json_encode($value) }}">
+    <div class="p-3 bg-light border gallery-upload" id="{{nameToId($name)}}" name="{{ $name }}" data-value="{{ json_encode($value) }}"
+        data-maxfiles="{{ $maxFiles}}"
+    
+        >
         <input type="hidden" name="{{ $name }}" value=""/>
         <div class="galleryupload-items">
             <input type="file" multiple class="galleryupload-file" accept="image/*" id="{{nameToId($name)}}-upload">        

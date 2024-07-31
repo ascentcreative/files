@@ -18,8 +18,30 @@ class GalleryUpload extends FormObjectBase implements FormComponent {
         $this->label = $label;
 
         $this->valueFunction(function($data) use ($name) {
-            return $data->images($name)->get();
+        //     if(is_array($data)) {
+        //         return $data[$name] ?? [];
+        //     } else {
+        //         return $data->images($name)->get();
+        //     }
+
+            if($this->model instanceof \Illuminate\Database\Eloquent\Model) {
+            
+                // If it's a model, it uses an eloquent relation, with a key, so we need to manually set the value
+        
+                return $this->model->images($name)->get();
+        
+            } else {
+
+                // otherwise, do this - which is basically just the default operation
+                // (but the valueFunction can't yet be added dynamically - one TODO...)
+                $prop = dotname($name);
+                return $this->traverseData($this->model, $prop);
+
+            }
         });
+
+        
+
     }
 
     // public function valueFunction($data) {

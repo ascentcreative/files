@@ -69,6 +69,10 @@
     display: none;
 }
 
+.fileuploadmulti .fileupload-reset:before {
+    margin: 0 !important;
+}
+
 .fileuploadmulti.has-file .fileupload-reset {
     /* display: inline-block; */
     position: relative;
