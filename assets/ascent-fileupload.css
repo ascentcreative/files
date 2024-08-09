@@ -25,9 +25,9 @@
   
 }
 
-.fileupload-text {
+/* .fileupload-text { */
     /* pointer-events: none; */
-}
+/* } */
 
 .fileupload .fileupload-ui {
     display: flex;
