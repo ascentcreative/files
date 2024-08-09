@@ -84,6 +84,9 @@ class FilesServiceProvider extends ServiceProvider
         Blade::component('files-fields-croppieupload', 'AscentCreative\Files\Components\Fields\CroppieUpload');
 
         Blade::component('files-previewer', 'AscentCreative\Files\Components\Previewer');
+
+        Blade::component('file-links', 'AscentCreative\Files\Components\FileLinks');
+        Blade::component('file-link', 'AscentCreative\Files\Components\FileLink');
     
 
   }
