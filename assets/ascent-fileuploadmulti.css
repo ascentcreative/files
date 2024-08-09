@@ -1,4 +1,4 @@
-.fileuploadmulti .form-control {
+.fileuploadmulti .fileuploadmulti-ui.form-control {
     padding: 0px;
     overflow: hidden;
     margin-bottom: 10px;
@@ -50,6 +50,35 @@
 .fileuploadmulti .fileupload-ui .fileupload-display .fileupload-text {
     position: relative;
     z-index: 11;
+}
+
+.fileuploadmulti-ui:not(.uploading) .fileupload-text {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 50% 1fr;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.fileuploadmulti-ui .fileupload-text .fileupload-filename { 
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* font-size: 0.9em; */
+}
+
+.fileuploadmulti-ui:not(.has-file) .fileupload-label input {
+    display: none;
+}
+
+.fileuploadmulti-ui .fileupload-label input {
+    width: 100%;
+    height: auto;
+    padding: 0 0.25rem;
+    /* font-size: 0.9em; */
+    margin: 0px 0;
+    /* border: 0; */
+    /* padding: 0.25rem; */
 }
 
 

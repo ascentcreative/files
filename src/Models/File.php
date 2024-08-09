@@ -17,7 +17,7 @@ class File extends Model
 
     public $table = 'files_files';
 
-    public $fillable = ['disk', 'hashed_filename', 'original_filename', 'mime_type', 'size', 'attachedto_type', 'attachedto_id', 'attachedto_key', 'attachedto_sort'];
+    public $fillable = ['disk', 'hashed_filename', 'original_filename', 'label', 'mime_type', 'size', 'attachedto_type', 'attachedto_id', 'attachedto_key', 'attachedto_sort'];
 
 
     protected static function booted() {

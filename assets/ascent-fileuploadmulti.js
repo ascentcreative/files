@@ -232,7 +232,10 @@ var FileUploadMultiFile = {
           // create a load of hidden text fields, holding the data items (allows for changes to the model?)
         for(key in data) {
             // console.log(key);
-            $(this.element).append('<input type="hidden" class="data-item" name="' + this.options.fieldname + '[9999][' + key + ']" value="' + data[key] + '">');
+            $(this.element).prepend('<input type="hidden" class="data-item" name="' + this.options.fieldname + '[9999][' + key + ']" value="' + data[key] + '">');
+            if(key == 'label') {
+                $(this.element).find('.fileupload-label INPUT').val(data[key]);
+            }
         }
 
         $(this.element).removeClass('uploading').addClass('has-file');
@@ -263,7 +266,7 @@ var FileUploadMultiFile = {
             }
         }
 
-        $(this.element).find('.fileupload-text').html(text);
+        $(this.element).find('.fileupload-text .fileupload-filename').html(text);
 
     },
 
