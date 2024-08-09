@@ -413,7 +413,7 @@ INPUT.galleryupload-file {
 .file-link {
     display: grid;
     grid-template-columns: 1fr auto;
-    border: 1px solid #dee2e6; var(--light);
+    border: 1px solid #dee2e6; 
     padding: 0.25em;
     border-radius: 0.325em;
     color: inherit;
