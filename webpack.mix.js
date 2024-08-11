@@ -12,13 +12,15 @@ const mix = require('laravel-mix');
  */
 
 mix.scripts([
-                'assets/*.js'
+                'assets/*.js',
+                'assets/vendor/lightbox2/*.js'
             ], 
             'assets/dist/js/ascent-files-bundle.js', 
             'assets/dist/js'
             )
     .styles([
-                'assets/*.css'
+                'assets/*.css',
+                'assets/vendor/lightbox2/*.css'
             ], 
                 'assets/dist/css/ascent-files-bundle.css', 
                 'assets/dist/css'

@@ -2,6 +2,7 @@
     display: grid;
     gap: 0.25rem;
 }
+
 .file-link {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -10,3 +11,12 @@
     border-radius: 0.325em;
     color: inherit;
 }
+
+.file-link:hover {
+    text-decoration: none;
+    color: inherit;
+    background: var(--light);
+}
+
+
+

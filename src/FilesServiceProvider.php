@@ -93,6 +93,9 @@ class FilesServiceProvider extends ServiceProvider
 
         Blade::component('file-links', 'AscentCreative\Files\Components\FileLinks');
         Blade::component('file-link', 'AscentCreative\Files\Components\FileLink');
+
+        Blade::component('files-lightbox-gallery', 'AscentCreative\Files\Components\LightboxGallery');
+        Blade::component('files-lightbox-image', 'AscentCreative\Files\Components\LightboxImage');
     
 
   }
