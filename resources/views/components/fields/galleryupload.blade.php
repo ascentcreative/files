@@ -52,7 +52,7 @@
         @style('/vendor/ascent/files/ascent.images.galleryupload.css')
     @endpush
     @push('scripts')
-        @script('/vendor/ascent/files/ascent.images.galleryupload.js')
+        @scripttag('/vendor/ascent/files/ascent.images.galleryupload.js')
         <script>
             $('.gallery-upload').galleryupload();
         </script>
