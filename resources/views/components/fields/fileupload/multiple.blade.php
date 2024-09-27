@@ -42,7 +42,7 @@
                 
                 <div class="fileupload-progress"></div>
                 <div class="fileupload-text">
-                    <div class="fileupload-label"><input class="form-control" type="text" name="{{ $name }}[999][label]" value="" placeholder="File Label"></div>
+                    @if($labelable)<div class="fileupload-label"><input class="form-control" type="text" name="{{ $name }}[999][label]" value="" placeholder="File Label"></div>@endif
                     <div class="fileupload-filename"></div>
                 </div>
                 <A href="#" onclick="return false;" class="fileupload-reset button btn btn-primary bi-trash-fill xbi-x-square-fill xtext-lg xtext-danger"></A>

@@ -60,6 +60,12 @@
     align-items: center;
 }
 
+.fileuploadmulti-ui:not(.uploading) .fileupload-text:not(:has(.fileupload-label)) {
+    grid-template-columns: 1fr;
+}
+
+
+
 .fileuploadmulti-ui .fileupload-text .fileupload-filename { 
     text-wrap: nowrap;
     overflow: hidden;

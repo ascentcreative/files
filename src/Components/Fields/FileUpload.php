@@ -31,6 +31,8 @@ class FileUpload extends Component
 
     public $token;
 
+    public $labelable;
+
     /**
      * Create a new component instance.
      *
@@ -38,7 +40,8 @@ class FileUpload extends Component
      */
     public function __construct($label, $name, $value=null, $disk='files', $path='', 
                                     $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', 
-                                    $accept=[], $multiple=false, $maxFiles=0, $sortable=false, $allowedSize='', $chunkSize='')
+                                    $accept=[], $multiple=false, $maxFiles=0, $sortable=false, $allowedSize='', $chunkSize='',
+                                    $labelable=false)
     {
         
         $this->label = $label;
@@ -51,6 +54,8 @@ class FileUpload extends Component
         $this->path = $path; 
         $this->wrapper = $wrapper;
         $this->class = $class;
+
+        $this->labelable = $labelable;
 
         $this->maxFiles = $maxFiles;
         if($multiple === false && $maxFiles > 1) {
