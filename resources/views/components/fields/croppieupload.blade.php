@@ -14,8 +14,6 @@
         data-value="{{ json_encode($value) }}"
         >
 
-       
-
         <img src="" class="img-preview" />
 
         <div class="placeholder">Click to upload image</div>
