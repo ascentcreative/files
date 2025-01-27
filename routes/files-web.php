@@ -202,6 +202,8 @@ Route::middleware(['web'])->group(function() {
             $fileModel = File::where('hashed_filename', $filename)->first();
             if($fileModel) {
 
+                Gate::authorize('download', $fileModel);
+
                 $converter = config('files.converters.' . $fileModel->mime_type . '.image/jpg');
                 if($converter) {
                     $filename = $converter::convert($fileModel->hashed_filename, []);
@@ -210,6 +212,8 @@ Route::middleware(['web'])->group(function() {
                 }
 
             }
+        } else {
+            Gate::authorize('download', $model);
         }
 
         // dump($idx);
