@@ -94,41 +94,42 @@ Route::middleware(['web'])->group(function() {
 
     // Old endpoint - used for single shot uploads.
     // Better to use the chunked option above
-    Route::post('/file-upload', function() {
+    // *** disbaled for secuirty ***
+    // Route::post('/file-upload', function() {
 
-        $params = request()->all();
+    //     $params = request()->all();
 
-        $disk = Storage::disk($params['disk']);
-        // dd($params);
+    //     $disk = Storage::disk($params['disk']);
+    //     // dd($params);
 
-        $payload = request()->file('payload');
-        $sanitise = $payload->getClientOriginalName();
-        $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
+    //     $payload = request()->file('payload');
+    //     $sanitise = $payload->getClientOriginalName();
+    //     $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
       
-        // Store image on disk.
-        if($params['preserveFilename']) {
-            $path = $disk->putFileAs('/' . $params['path'], request()->file('payload'),  $sanitise);
-        } else {
-            $path = $disk->putFile('/' . $params['path'], request()->file('payload'));
-        }
+    //     // Store image on disk.
+    //     if($params['preserveFilename']) {
+    //         $path = $disk->putFileAs('/' . $params['path'], request()->file('payload'),  $sanitise);
+    //     } else {
+    //         $path = $disk->putFile('/' . $params['path'], request()->file('payload'));
+    //     }
         
   
-        // Create a File model, but don't save it - Return as JSON.
-        $file = new File();
-        $file->disk = $params['disk']; //'files';
-        $file->hashed_filename = $path; //pathinfo($path)['basename']; 
+    //     // Create a File model, but don't save it - Return as JSON.
+    //     $file = new File();
+    //     $file->disk = $params['disk']; //'files';
+    //     $file->hashed_filename = $path; //pathinfo($path)['basename']; 
 
        
-        $file->original_filename = $sanitise; 
-        $file->size = $disk->size($path);
-        $file->mime_type = $disk->mimeType($path);
+    //     $file->original_filename = $sanitise; 
+    //     $file->size = $disk->size($path);
+    //     $file->mime_type = $disk->mimeType($path);
 
-        // TODO - the File model will need to check for duplicate filenames and increment on save.
-        // Or does it need to? yes, I think it does. 
+    //     // TODO - the File model will need to check for duplicate filenames and increment on save.
+    //     // Or does it need to? yes, I think it does. 
 
-        return response()->json($file);
+    //     return response()->json($file);
 
-    })->middleware($aryMW);
+    // })->middleware($aryMW);
 
 
     /**
