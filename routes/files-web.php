@@ -12,12 +12,18 @@ use AscentCreative\Files\ImageSizer;
 
 Route::middleware(['web'])->group(function() {
 
+
+    $bannedPattern = '/(\.|\/)(bat|exe|cmd|sh|sql|php([0-9])?|pl|cgi|386|dll|com|torrent|js|app|jar|pif|vb|vbscript|wsf|asp|cer|csr|jsp|drv|sys|ade|adp|bas|chm|cpl|crt|csh|fxp|hlp|hta|inf|ins|isp|jse|htaccess|htpasswd|ksh|lnk|mdb|mde|mdt|mdw|msc|msi|msp|mst|ops|pcd|prg|reg|scr|sct|shb|shs|url|vbe|vbs|wsc|wsf|wsh|tar|gz)/';
+
     $aryMW = ['files-upload-access']; 
     // ['auth', 'can:upload-files'] are now combined into the above Middleware;
 
     // TODO - Read encrypted config data to avoid client-side bypassing of allowed max size etc.
-    Route::post('/chunked-upload', function() {
+    Route::post('/chunked-upload', function() use ($bannedPattern) {
 
+        if(request()->disk == 'public') {
+            abort(401, 'Illegal Disk');
+        }
         $disk = Storage::disk(request()->disk);
 
         // open or create a temp file to store the incoming chunks
@@ -55,6 +61,15 @@ Route::middleware(['web'])->group(function() {
             
             $payload = request()->file('payload');
 
+            preg_match($bannedPattern,
+                        $payload->getClientOriginalName(),
+                        $matches);
+
+            if(count($matches) > 0) {
+                abort(401, 'Banned Filetype');
+            }
+    
+
             // dump(request()->all());
             // dd($payload);
             $sanitise = $payload->getClientOriginalName();
@@ -90,19 +105,41 @@ Route::middleware(['web'])->group(function() {
 
     })->middleware($aryMW); 
 
+    // Route::get('diskcheck', function() {
+    //     $disk = Storage::disk('public');
+    //     dd($disk);
+    // });
 
 
     // Old endpoint - used for single shot uploads.
     // Better to use the chunked option above
     // *** disbaled for secuirty ***
-    // Route::post('/file-upload', function() {
+    // Route::post('/file-upload', function() use ($bannedPattern) {
 
+    //     // dd("here");
+        
     //     $params = request()->all();
+    //     $disk = Storage::disk($params['disk']);
+      
+    //     if(request()->disk == 'public') {
+    //         abort(401);
+    //     }
 
     //     $disk = Storage::disk($params['disk']);
     //     // dd($params);
 
     //     $payload = request()->file('payload');
+
+    //     // check file types
+    //     // (Should make this list configrable)
+    //     preg_match($bannedPattern,
+    //                 $payload->getClientOriginalName(),
+    //                 $matches);
+
+    //     if(count($matches) > 0) {
+    //         abort(401, 'Banned Filetype');
+    //     }
+
     //     $sanitise = $payload->getClientOriginalName();
     //     $sanitise = str_replace(array('?', '#', '/', '\\', ','), '', $sanitise);
       
@@ -129,7 +166,8 @@ Route::middleware(['web'])->group(function() {
 
     //     return response()->json($file);
 
-    // })->middleware($aryMW);
+    // });
+    //->middleware($aryMW);
 
 
     /**

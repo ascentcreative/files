@@ -164,25 +164,29 @@ class ChunkableUploader {
                   
             }).fail(function (data) {
 
-                let message = ''
+                let message = data.responseJSON.message;
 
-                switch(data.status) {
-                    case 401:
-                        message = 'Unauthorised';
-                     break;
-
-                    case 403:
-                       message = 'You do not have permission to upload files';
-                    break;
-
-                    case 413:
-                        message = 'The file is too large for the server to accept'; 
-                    break;
-
-                    default:
-                        message = 'An unexpected error occurred';
+                if(message == '')  {
+                    switch(data.status) {
+                        case 401:
+                            message = 'Unauthorised';
                         break;
+
+                        case 403:
+                        message = 'You do not have permission to upload files';
+                        break;
+
+                        case 413:
+                            message = 'The file is too large for the server to accept'; 
+                        break;
+
+                        default:
+                            message = 'An unexpected error occurred';
+                            break;
+                    }
                 }
+
+                
                 
                 $(document).trigger('chunkupload-error', {
                     chunkerId: uploader.chunkerId,
