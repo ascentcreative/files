@@ -44,7 +44,7 @@ class FileUpload extends Component
      */
     public function __construct($label, $name, $value=null, $disk='files', $path='', 
                                     $preserveFilename=false, $wrapper="bootstrapformgroup", $class='', 
-                                    $accept=[], $multiple=false, $maxFiles=0, $sortable=false, $allowedSize='', $chunkSize='',
+                                    $accept=[], $multiple=false, $maxFiles=0, $sortable=false, $allowedSize='5M', $chunkSize='',
                                     $labelable=false)
     {
         
