@@ -5,6 +5,7 @@ namespace AscentCreative\Files\Components\Fields;
 use Illuminate\View\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+use AscentCreative\Files\UploadConfig;
 
 class CroppieUpload extends Component
 {
@@ -29,13 +30,14 @@ class CroppieUpload extends Component
     public $allowedSize; // the upper limit of files we'll allow!
 
     public $token;
+    public $config;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($label, $name, $value=null, $disk='files', $path='', $preserveFilename=false, $wrapper="simple", $class='', $accept=[], $multiple=false, $sortable=false, $allowedSize='', $chunkSize='')
+    public function __construct($label, $name, $value=null, $disk='files', $path='', $preserveFilename=false, $wrapper="simple", $class='', $accept=[], $multiple=false, $sortable=false, $allowedSize='5M', $chunkSize='')
     {
         
         $this->label = $label;
@@ -75,7 +77,7 @@ class CroppieUpload extends Component
             // Or, maybe we encode/encrypt a copy of the config, and the server cross checks that.... <- Yes. Do this.
         }
 
-        // create a token in the session and pass to the UI.
+        // create a token in tqhe session and pass to the UI.
         $key = uniqid();
         $value = Str::uuid()->toString();
     
@@ -83,6 +85,14 @@ class CroppieUpload extends Component
 
         // session()->push('upload_tokens.abc', '123');
         $this->token = Crypt::encryptString($key . ':' . $value);
+
+        $this->config = UploadConfig::make([
+            'accept'=> 'image/*',
+            'disk' => $disk,
+            'path' => $path,
+            'preserveFilename' => $preserveFilename,
+            'allowedSize' => $this->allowedSize
+         ]);
 
     }
 

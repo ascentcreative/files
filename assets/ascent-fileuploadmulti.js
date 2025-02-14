@@ -20,7 +20,8 @@ var FileUploadMulti = {
         chunkSize: null,
         allowedSize: 0,
         token: null,
-        maxFiles: 0
+        maxFiles: 0,
+        configtoken: null
     },
     
     _init: function () {
@@ -44,6 +45,7 @@ var FileUploadMulti = {
         this.options.allowedSize = $(obj).data('allowedsize');
         this.options.token = $(obj).data('token');
         this.options.maxFiles = $(obj).data('maxfiles');
+        this.options.configtoken = $(obj).data('configtoken');
 
         if(this.options.data) {
             for(file in this.options.data) {
@@ -152,7 +154,9 @@ var FileUploadMulti = {
             fieldname: this.element.attr('name'),
             chunkSize: this.options.chunkSize,
             allowedSize: this.options.allowedSize,
-            token: this.options.token
+            token: this.options.token,
+            configtoken: this.options.configtoken
+
         });
         if(data) {
             // console.log('setting data');
@@ -204,7 +208,8 @@ var FileUploadMultiFile = {
         fieldname: '',
         chunkSize: null,
         allowedSize: 0,
-        token: null
+        token: null,
+        configtoken: null
     },
 
     _init: function() {
@@ -293,6 +298,7 @@ var FileUploadMultiFile = {
             'preserveFilename': self.options.preserveFilename?1:0,
             'chunkSize': self.options.chunkSize,
             'token': self.options.token,
+            'configtoken': self.options.configtoken
         });
 
         $(document).on("chunkupload-progress", function(e, data) {

@@ -146,7 +146,8 @@ class ChunkableUploader {
                 data: formData,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    'X-UPLOAD-TOKEN': uploader.token
+                    'X-UPLOAD-TOKEN': uploader.token,
+                    'X-UPLOAD-CONFIG': uploader.configtoken
                 }
                 
               }).done(function(data, xhr, request){

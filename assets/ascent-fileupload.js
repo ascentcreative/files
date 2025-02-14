@@ -15,7 +15,8 @@ var FileUpload = {
         placeholder: 'Choose file',
         chunkSize: null,
         allowedSize: 0,
-        token: null
+        token: null,
+        configtoken: null
     },
     
     _init: function () {
@@ -45,6 +46,7 @@ var FileUpload = {
         this.options.chunkSize = $(obj).data('chunksize');
         this.options.allowedSize = $(obj).data('allowedsize');
         this.options.token = $(obj).data('token');
+        this.options.configtoken = $(obj).data('configtoken');
         // console.log($(obj).data());
 
         upl = $(this.element).find('input[type="file"]');
@@ -77,6 +79,7 @@ var FileUpload = {
                 'preserveFilename': self.options.preserveFilename?1:0,
                 'chunkSize': self.options.chunkSize,
                 'token': self.options.token,
+                'configtoken': self.options.configtoken
             });
 
             

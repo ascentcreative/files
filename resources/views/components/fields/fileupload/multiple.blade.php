@@ -15,13 +15,14 @@
         data-fieldname="{{ $name }}"
         data-value="{{ json_encode($value) }}"
         data-sortable="{{ $sortable ? 'true' : 'false' }}"
-        data-disk="{{ $disk }}"
+        {{-- data-disk="{{ $disk }}"
         data-path="{{ $path }}"
-        data-preservefilename="{{ $preserveFilename ? 'true':'false' }}"
+        data-preservefilename="{{ $preserveFilename ? 'true':'false' }}" --}}
         data-chunksize="{{ $chunkSize }}"
         data-allowedsize="{{ $allowedSize }}"
         data-token="{{ $token }}"
         data-maxfiles="{{ $maxFiles }}"
+        data-configtoken="{{ $config->token }}"
         >
         <input type="file" multiple class="fileupload-file" accept="{{ join(',', $accept) }}" id="{{nameToId($name)}}-upload-{{ $unid = uniqid() }}">        
         <input type="hidden" value="" name="{{ $name }}" />

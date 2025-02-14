@@ -116,7 +116,6 @@
     flex: 1 1 100%;
     height: calc(1.5em + .75rem + 2px);
     position: relative;
-  
 
     display: flex;
     align-items: center;
@@ -129,7 +128,7 @@
     z-index: 11;
 }
 
-.fileupload.error {
+.fileupload.error .fileupload-display {
     background: var(--danger) !important;
 }
 
@@ -234,7 +233,7 @@ audio.read-only-file-component::-webkit-media-controls-enclosure {
     flex: 1 1 100%;
     height: calc(1.5em + .75rem + 2px);
     position: relative;
-  
+    justify-content: space-between;
 
     display: flex;
     align-items: center;

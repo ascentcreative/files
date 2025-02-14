@@ -20,13 +20,14 @@
 
         <div class="fileupload xform-control" id="{{nameToId($name)}}" 
                 data-fieldname="{{ $name }}"
-                data-disk="{{ $disk }}"
-                data-path="{{ $path }}"
-                data-preservefilename="{{ $preserveFilename ? 'true':'false' }}"
+                {{-- data-disk="{{ $disk }}" --}}
+                {{-- data-path="{{ $path }}" --}}
+                {{-- data-preservefilename="{{ $preserveFilename ? 'true':'false' }}" --}}
                 data-value="{{ json_encode($value) }}"
                 data-chunksize="{{ $chunkSize }}"
                 data-allowedsize="{{ $allowedSize }}"
                 data-token="{{ $token }}"
+                data-configtoken="{{ $config->token }}"
             >
 
             <div class="form-control">

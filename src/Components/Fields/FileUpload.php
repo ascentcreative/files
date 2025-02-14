@@ -6,6 +6,8 @@ use Illuminate\View\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
 
+use AscentCreative\Files\UploadConfig;
+
 class FileUpload extends Component
 {
 
@@ -30,6 +32,8 @@ class FileUpload extends Component
     public $allowedSize; // the upper limit of files we'll allow!
 
     public $token;
+
+    public $config;
 
     public $labelable;
 
@@ -95,6 +99,14 @@ class FileUpload extends Component
 
         // session()->push('upload_tokens.abc', '123');
         $this->token = Crypt::encryptString($key . ':' . $value);
+
+        $this->config = UploadConfig::make([
+           'accept'=>$accept,
+           'disk' => $disk,
+           'path' => $path,
+           'preserveFilename' => $preserveFilename,
+           'allowedSize' => $this->allowedSize
+        ]);
 
     }
 

@@ -12,6 +12,7 @@
         data-fieldname="{{ $name }}"
         data-token="{{ $token }}"
         data-value="{{ json_encode($value) }}"
+        data-configtoken="{{ $config->token }}"
         >
 
         <img src="" class="img-preview" />

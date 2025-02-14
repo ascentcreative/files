@@ -19,7 +19,8 @@ var CroppieUpload = {
     placeholder: 'Choose file',
     chunkSize: null,
     allowedSize: 0,
-    token: null
+    token: null,
+    configtoken: null
   },
   _init: function _init() {
     var self = this;
@@ -30,6 +31,7 @@ var CroppieUpload = {
     var obj = this.element;
     $(obj).addClass('initialised');
     this.options.token = $(obj).data('token');
+    this.options.configtoken = $(obj).data('configtoken');
 
     // alert(this.options.token);
 
@@ -150,7 +152,8 @@ var CroppieUpload = {
           'preserveFilename': 0,
           //self.options.preserveFilename?1:0,
           // 'chunkSize': null, //self.options.chunkSize,
-          'token': self.options.token
+          'token': self.options.token,
+          'configtoken': self.options.configtoken
         });
         $(document).on("chunkupload-complete", function (e, data) {
           console.log(data);
@@ -240,7 +243,8 @@ var FileUpload = {
     placeholder: 'Choose file',
     chunkSize: null,
     allowedSize: 0,
-    token: null
+    token: null,
+    configtoken: null
   },
   _init: function _init() {
     var self = this;
@@ -262,6 +266,7 @@ var FileUpload = {
     this.options.chunkSize = $(obj).data('chunksize');
     this.options.allowedSize = $(obj).data('allowedsize');
     this.options.token = $(obj).data('token');
+    this.options.configtoken = $(obj).data('configtoken');
     // console.log($(obj).data());
 
     upl = $(this.element).find('input[type="file"]');
@@ -286,7 +291,8 @@ var FileUpload = {
         'path': self.options.path,
         'preserveFilename': self.options.preserveFilename ? 1 : 0,
         'chunkSize': self.options.chunkSize,
-        'token': self.options.token
+        'token': self.options.token,
+        'configtoken': self.options.configtoken
       });
       $(document).on("chunkupload-progress", function (e, data) {
         $(self.element).addClass('file-uploading');
@@ -473,7 +479,8 @@ var FileUploadMulti = {
     chunkSize: null,
     allowedSize: 0,
     token: null,
-    maxFiles: 0
+    maxFiles: 0,
+    configtoken: null
   },
   _init: function _init() {
     var self = this;
@@ -490,6 +497,7 @@ var FileUploadMulti = {
     this.options.allowedSize = $(obj).data('allowedsize');
     this.options.token = $(obj).data('token');
     this.options.maxFiles = $(obj).data('maxfiles');
+    this.options.configtoken = $(obj).data('configtoken');
     if (this.options.data) {
       for (file in this.options.data) {
         this.createFileBlock(this.options.data[file]);
@@ -570,7 +578,8 @@ var FileUploadMulti = {
       fieldname: this.element.attr('name'),
       chunkSize: this.options.chunkSize,
       allowedSize: this.options.allowedSize,
-      token: this.options.token
+      token: this.options.token,
+      configtoken: this.options.configtoken
     });
     if (data) {
       // console.log('setting data');
@@ -604,7 +613,8 @@ var FileUploadMultiFile = {
     fieldname: '',
     chunkSize: null,
     allowedSize: 0,
-    token: null
+    token: null,
+    configtoken: null
   },
   _init: function _init() {
     // console.log("INIT FILE");
@@ -675,7 +685,8 @@ var FileUploadMultiFile = {
       'path': self.options.path,
       'preserveFilename': self.options.preserveFilename ? 1 : 0,
       'chunkSize': self.options.chunkSize,
-      'token': self.options.token
+      'token': self.options.token,
+      'configtoken': self.options.configtoken
     });
     $(document).on("chunkupload-progress", function (e, data) {
       // console.log(data.chunkerId + ' - ' + self.uploader.chunkerId);
@@ -1084,7 +1095,8 @@ var ChunkableUploader = /*#__PURE__*/function () {
         data: formData,
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-          'X-UPLOAD-TOKEN': uploader.token
+          'X-UPLOAD-TOKEN': uploader.token,
+          'X-UPLOAD-CONFIG': uploader.configtoken
         }
       }).done(function (data, xhr, request) {
         if (parseInt(data.chunkIdx) < uploader.chunkCount) {

@@ -12,6 +12,65 @@ use AscentCreative\Files\ImageSizer;
 
 Route::middleware(['web'])->group(function() {
 
+    Route::get('/uploadconfigtest', function() {
+
+        // $cfg = new \AscentCreative\Files\UploadConfig();
+        // $cfg->foo = 'bar';
+        // $cfg->set('abc', 123);
+
+        // // dump($cfg);
+        // // dump($cfg->foo);
+        // // dump($cfg->get('abc'));
+
+        // // dump('Allow 123.php?');
+        // // dump($cfg->filetypeAllowed('123.php'));
+
+        // // dump('Allow 123.doc?');
+        // // dump($cfg->filetypeAllowed('123.doc'));
+        
+        // // dump('Allow 123.jpg?');
+        // // dump($cfg->filetypeAllowed('123.jpg'));
+
+        // // dump('Allow 123.JPG?');
+        // // dump($cfg->filetypeAllowed('123.JPG'));
+
+        // $cfg->addAllowedType('jpg');
+        // $cfg->addAllowedTypes(['png', 'gif', 'jpeg']);
+
+        // // dump('Allow 123.php?');
+        // // dump($cfg->filetypeAllowed('123.php'));
+
+        // // dump('Allow 123.doc?');
+        // // dump($cfg->filetypeAllowed('123.doc'));
+        
+        // // dump('Allow 123.jpg?');
+        // // dump($cfg->filetypeAllowed('123.jpg'));
+
+        // // dump('Allow 123.JPG?');
+        // // dump($cfg->filetypeAllowed('123.JPG'));
+        // $id = uniqid();
+
+        // session()->put('upload_configs.' . $id, $cfg);
+
+        dump(session()->get('upload_tokens'));
+        dump(session()->get('upload_configs'));
+
+        
+
+    });
+
+    Route::post('/validatemime', function() {
+
+        $cfg = new \AscentCreative\Files\UploadConfig();
+
+        $cfg->accept('audio/*'); //['image/*', 'application/pdf']);
+
+        return $cfg->allowFile(request()->file('payload'));
+
+    });
+
+
+
 
     $bannedPattern = '/(\.|\/)(bat|exe|cmd|sh|sql|php([0-9])?|pl|cgi|386|dll|com|torrent|js|app|jar|pif|vb|vbscript|wsf|asp|cer|csr|jsp|drv|sys|ade|adp|bas|chm|cpl|crt|csh|fxp|hlp|hta|inf|ins|isp|jse|htaccess|htpasswd|ksh|lnk|mdb|mde|mdt|mdw|msc|msi|msp|mst|ops|pcd|prg|reg|scr|sct|shb|shs|url|vbe|vbs|wsc|wsf|wsh|tar|gz)/';
 
@@ -21,20 +80,35 @@ Route::middleware(['web'])->group(function() {
     // TODO - Read encrypted config data to avoid client-side bypassing of allowed max size etc.
     Route::post('/chunked-upload', function() use ($bannedPattern) {
 
-        if(request()->disk == 'public') {
-            abort(401, 'Illegal Disk');
+        $hdr = request()->header('X-UPLOAD-CONFIG');
+        if(!$hdr || !($cfg = session()->get('upload_configs.' . $hdr))) {
+            abort(419, 'Invalid Config Token');
         }
-        $disk = Storage::disk(request()->disk);
+
+        $payload = request()->file("payload");
+        $payload->chunkerId = request()->chunkerId;
+        $payload->totalSize = request()->totalSize;
+        $payload->chunkIdx = request()->chunkIdx;
+
+        if(!$cfg->allowFile($payload)) {
+            abort(422, 'Invalid File'); 
+        }
+
+        if(is_null(request()->totalSize) || (request()->totalSize > $cfg->allowedSize)) {
+            abort(422, 'File is too large');
+        }
+
+        $disk = Storage::disk($cfg->disk); //cffrequest()->disk);
 
         // open or create a temp file to store the incoming chunks
-        $path = request()->path;
+        $path = $cfg->path;
         if ($path != '') {
             $path .= '/';
         }
+        // dd($path);
         $chunkfile = $path . request()->chunkerId . '.' . pathinfo($_FILES['payload']['name'], PATHINFO_EXTENSION);
         $chunkpath = $disk->path($chunkfile);
         $out = fopen($chunkpath, request()->chunkIdx == 1 ? "wb" : "ab");
-
 
         // append the chunk to the file:
         if ($out) {
@@ -58,17 +132,6 @@ Route::middleware(['web'])->group(function() {
 
         // if final chunk - move the completed file to storage
         if(request()->chunkIdx == request()->chunkCount) {
-            
-            $payload = request()->file('payload');
-
-            preg_match($bannedPattern,
-                        $payload->getClientOriginalName(),
-                        $matches);
-
-            if(count($matches) > 0) {
-                abort(401, 'Banned Filetype');
-            }
-    
 
             // dump(request()->all());
             // dd($payload);
@@ -77,7 +140,7 @@ Route::middleware(['web'])->group(function() {
 
             // // Store image on disk.
             $dest = $path;
-            if(request()->preserveFilename) {
+            if($cfg->preserveFilename) {
                 $dest .= $sanitise;
             } else {
                 $tempfile = new HttpFile($chunkpath);
@@ -88,7 +151,7 @@ Route::middleware(['web'])->group(function() {
 
              // Create a File model, but don't save it - Return as JSON.
             $file = new File();
-            $file->disk = request()->disk; //'files';
+            $file->disk = $cfg->disk; //'files';
             $file->hashed_filename = $dest; //$path; //pathinfo($path)['basename']; 
 
             $file->original_filename = $sanitise; 
@@ -103,7 +166,7 @@ Route::middleware(['web'])->group(function() {
         // the JS knows to send the next chunk.
         return response()->json(request()->all());
 
-    })->middleware($aryMW); 
+    }); //->middleware($aryMW); 
 
     // Route::get('diskcheck', function() {
     //     $disk = Storage::disk('public');

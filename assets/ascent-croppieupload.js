@@ -15,7 +15,8 @@ var CroppieUpload = {
         placeholder: 'Choose file',
         chunkSize: null,
         allowedSize: 0,
-        token: null
+        token: null,
+        configtoken: null,
     },
     
     _init: function () {
@@ -34,6 +35,7 @@ var CroppieUpload = {
         $(obj).addClass('initialised');
 
         this.options.token = $(obj).data('token');
+        this.options.configtoken = $(obj).data('configtoken');
 
         // alert(this.options.token);
 
@@ -181,6 +183,7 @@ var CroppieUpload = {
                     'preserveFilename': 0, //self.options.preserveFilename?1:0,
                     // 'chunkSize': null, //self.options.chunkSize,
                     'token': self.options.token,
+                    'configtoken': self.options.configtoken
                 });
 
                 $(document).on("chunkupload-complete", function(e, data) {
