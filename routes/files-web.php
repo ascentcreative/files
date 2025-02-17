@@ -12,63 +12,6 @@ use AscentCreative\Files\ImageSizer;
 
 Route::middleware(['web'])->group(function() {
 
-    Route::get('/uploadconfigtest', function() {
-
-        // $cfg = new \AscentCreative\Files\UploadConfig();
-        // $cfg->foo = 'bar';
-        // $cfg->set('abc', 123);
-
-        // // dump($cfg);
-        // // dump($cfg->foo);
-        // // dump($cfg->get('abc'));
-
-        // // dump('Allow 123.php?');
-        // // dump($cfg->filetypeAllowed('123.php'));
-
-        // // dump('Allow 123.doc?');
-        // // dump($cfg->filetypeAllowed('123.doc'));
-        
-        // // dump('Allow 123.jpg?');
-        // // dump($cfg->filetypeAllowed('123.jpg'));
-
-        // // dump('Allow 123.JPG?');
-        // // dump($cfg->filetypeAllowed('123.JPG'));
-
-        // $cfg->addAllowedType('jpg');
-        // $cfg->addAllowedTypes(['png', 'gif', 'jpeg']);
-
-        // // dump('Allow 123.php?');
-        // // dump($cfg->filetypeAllowed('123.php'));
-
-        // // dump('Allow 123.doc?');
-        // // dump($cfg->filetypeAllowed('123.doc'));
-        
-        // // dump('Allow 123.jpg?');
-        // // dump($cfg->filetypeAllowed('123.jpg'));
-
-        // // dump('Allow 123.JPG?');
-        // // dump($cfg->filetypeAllowed('123.JPG'));
-        // $id = uniqid();
-
-        // session()->put('upload_configs.' . $id, $cfg);
-
-        dump(session()->get('upload_tokens'));
-        dump(session()->get('upload_configs'));
-
-        
-
-    });
-
-    Route::post('/validatemime', function() {
-
-        $cfg = new \AscentCreative\Files\UploadConfig();
-
-        $cfg->accept('audio/*'); //['image/*', 'application/pdf']);
-
-        return $cfg->allowFile(request()->file('payload'));
-
-    });
-
 
 
 
