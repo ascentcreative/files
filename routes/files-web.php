@@ -326,7 +326,9 @@ Route::middleware(['web'])->group(function() {
         }
 
         // does this file exist for the requested spec?
-        if (!Storage::disk('files')->exists($spec . '/'. $filename[0])) {
+        // dd($spec . '/'. $filename);
+
+        if (!Storage::disk('files')->exists($spec . '/'. $filename)) {
 
             // No:
             // - so does it exist in the 'original' folder?
