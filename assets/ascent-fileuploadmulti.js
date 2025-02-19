@@ -285,6 +285,8 @@ var FileUploadMultiFile = {
 
         $(self.element).addClass('uploading');
 
+        console.log(file);
+
         // console.log(self.options);
 
         if(self.options.allowedSize > 0 && file.size > self.options.allowedSize) {
