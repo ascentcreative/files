@@ -6,6 +6,8 @@ use Illuminate\View\Component;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
 
+use Illuminate\Support\Facades\Log;
+
 use AscentCreative\Files\UploadConfig;
 
 class FileUpload extends Component
@@ -107,6 +109,8 @@ class FileUpload extends Component
            'preserveFilename' => $preserveFilename,
            'allowedSize' => $this->allowedSize
         ]);
+
+       
 
     }
 

@@ -6,6 +6,10 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Log;
+
+use Symfony\Component\Mime\MimeTypes;
+
 /** stores details about an uploader's destination and config so we're not relying on data from the client */
 class UploadConfig {
 
@@ -132,6 +136,10 @@ class UploadConfig {
     }
 
     public function allowFile(UploadedFile $file) {
+
+        $mimeTypes = new MimeTypes();
+        $mimeType = $mimeTypes->guessMimeType($file->getPathName());
+        Log::channel('files')->info("Guess = " . $mimeType);
 
         // Chunked uploads should only be validated on the first chunk:
         if($file->chunkerId) {

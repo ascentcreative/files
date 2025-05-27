@@ -76,6 +76,8 @@ class FilesServiceProvider extends ServiceProvider
     $this->bootComponents();
 
     $this->bootPublishes();
+
+    $this->bootLogging();
     
   }
 
@@ -128,6 +130,14 @@ class FilesServiceProvider extends ServiceProvider
 
     }
 
+
+    public function bootLogging() {
+        $this->app->make('config')->set('logging.channels.files', [
+            'driver' => 'single',
+            'path' => storage_path('logs/files.log'),
+            'level' => 'debug',
+        ]);
+    }
 
 
 }
